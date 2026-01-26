@@ -39,12 +39,19 @@ export default async function HomePage() {
             Go to admin panel
           </a>
           <a
-            className="docs"
-            href="https://payloadcms.com/docs"
+            className="admin"
+            href={`${payloadConfig.routes.admin}/globals/theme-editor`}
             rel="noopener noreferrer"
             target="_blank"
           >
-            Documentation
+            Theme Editor
+          </a>
+          <a
+            className="docs"
+            href="/preview"
+            rel="noopener noreferrer"
+          >
+            Theme Preview
           </a>
         </div>
       </div>

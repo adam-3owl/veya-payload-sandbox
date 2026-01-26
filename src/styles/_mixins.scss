@@ -1,0 +1,451 @@
+// =============================================================================
+// Shared SCSS Mixins
+// Reusable patterns across all admin components
+// =============================================================================
+
+@use 'variables' as *;
+
+// -----------------------------------------------------------------------------
+// Form Field Base
+// -----------------------------------------------------------------------------
+@mixin field-container {
+  margin-bottom: $spacing-base;
+}
+
+@mixin field-label {
+  display: block;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+@mixin field-description {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  margin-top: $spacing-xs;
+}
+
+// -----------------------------------------------------------------------------
+// Input Base
+// -----------------------------------------------------------------------------
+@mixin input-base {
+  width: 100%;
+  height: $input-height;
+  padding: $input-padding-y $input-padding-x;
+  font-size: $font-size-base;
+  font-family: $font-family-base;
+  color: $color-text-primary;
+  background: $input-bg;
+  border: $input-border-width solid $input-border-color;
+  border-radius: $radius-base;
+  outline: none;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:hover {
+    border-color: $color-border-dark;
+  }
+
+  &:focus {
+    border-color: $input-border-color-focus;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+
+  &:disabled {
+    background: $input-bg-disabled;
+    color: $color-text-muted;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+}
+
+@mixin input-small {
+  height: $input-height-sm;
+  padding: $spacing-xs $spacing-sm;
+  font-size: $font-size-sm;
+}
+
+// -----------------------------------------------------------------------------
+// Select Base
+// -----------------------------------------------------------------------------
+@mixin select-base {
+  @include input-base;
+  appearance: none;
+  cursor: pointer;
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+// -----------------------------------------------------------------------------
+// Slider Track & Thumb
+// -----------------------------------------------------------------------------
+@mixin slider-track {
+  width: 100%;
+  height: $slider-track-height;
+  background: $slider-track-bg;
+  border-radius: $radius-full;
+  cursor: pointer;
+}
+
+@mixin slider-thumb {
+  width: $slider-thumb-size;
+  height: $slider-thumb-size;
+  background: $slider-thumb-bg;
+  border: 2px solid $slider-thumb-border;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: $slider-thumb-shadow;
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+@mixin slider-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: $slider-track-height;
+  background: transparent;
+  cursor: pointer;
+
+  // Track styles
+  &::-webkit-slider-runnable-track {
+    @include slider-track;
+  }
+
+  &::-moz-range-track {
+    @include slider-track;
+  }
+
+  // Thumb styles
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    @include slider-thumb;
+    margin-top: -($slider-thumb-size - $slider-track-height) / 2;
+  }
+
+  &::-moz-range-thumb {
+    @include slider-thumb;
+    border: 2px solid $slider-thumb-border;
+  }
+
+  &:focus {
+    outline: none;
+
+    &::-webkit-slider-thumb {
+      box-shadow: $slider-thumb-shadow, 0 0 0 3px rgba($color-primary, 0.2);
+    }
+
+    &::-moz-range-thumb {
+      box-shadow: $slider-thumb-shadow, 0 0 0 3px rgba($color-primary, 0.2);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Button Base
+// -----------------------------------------------------------------------------
+@mixin btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  padding: $btn-padding-y $btn-padding-x;
+  font-size: $btn-font-size;
+  font-weight: $btn-font-weight;
+  font-family: $font-family-base;
+  line-height: 1;
+  border-radius: $btn-border-radius;
+  border: none;
+  cursor: pointer;
+  transition: background-color $transition-fast, color $transition-fast, opacity $transition-fast;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin btn-primary {
+  @include btn-base;
+  background: $color-primary;
+  color: $color-text-inverse;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-hover;
+  }
+}
+
+@mixin btn-secondary {
+  @include btn-base;
+  background: transparent;
+  color: $color-text-secondary;
+
+  &:hover:not(:disabled) {
+    background: $color-surface-tertiary;
+    color: $color-text-primary;
+  }
+}
+
+@mixin btn-outline {
+  @include btn-base;
+  background: $color-surface;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+
+  &:hover:not(:disabled) {
+    background: $color-surface-secondary;
+    border-color: $color-border-dark;
+  }
+}
+
+@mixin btn-danger {
+  @include btn-base;
+  background: $color-error;
+  color: $color-text-inverse;
+
+  &:hover:not(:disabled) {
+    background: darken($color-error, 10%);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Color Picker
+// -----------------------------------------------------------------------------
+@mixin color-swatch($size: 28px) {
+  width: $size;
+  height: $size;
+  min-width: $size;
+  border-radius: $radius-base;
+  border: 1px solid $color-border;
+  cursor: pointer;
+  transition: border-color $transition-fast, transform $transition-fast;
+
+  &:hover {
+    border-color: $color-border-dark;
+    transform: scale(1.05);
+  }
+}
+
+@mixin color-popup {
+  position: absolute;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  box-shadow: $shadow-popup;
+  z-index: $z-popover;
+  min-width: 220px;
+}
+
+@mixin hue-slider {
+  width: 100%;
+  height: 12px;
+  border-radius: $radius-full;
+  background: linear-gradient(
+    to right,
+    hsl(0, 100%, 50%),
+    hsl(60, 100%, 50%),
+    hsl(120, 100%, 50%),
+    hsl(180, 100%, 50%),
+    hsl(240, 100%, 50%),
+    hsl(300, 100%, 50%),
+    hsl(360, 100%, 50%)
+  );
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: $color-surface;
+    border: 2px solid $color-surface;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+
+  &::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: $color-surface;
+    border: 2px solid $color-surface;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Toggle Switch
+// -----------------------------------------------------------------------------
+@mixin toggle-switch($width: 44px, $height: 24px) {
+  $thumb-size: $height - 4px;
+
+  position: relative;
+  width: $width;
+  height: $height;
+  background: $color-surface-tertiary;
+  border-radius: $radius-full;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+  border: 1px solid $color-border;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: $thumb-size;
+    height: $thumb-size;
+    background: $color-surface;
+    border-radius: 50%;
+    box-shadow: $shadow-sm;
+    transition: transform $transition-fast;
+  }
+
+  &.active {
+    background: $color-primary;
+    border-color: $color-primary;
+
+    &::after {
+      transform: translateX($width - $thumb-size - 4px);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Collapsible Sections
+// -----------------------------------------------------------------------------
+@mixin collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $spacing-base;
+  cursor: pointer;
+  background: $color-surface-secondary;
+  border-radius: $radius-base;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background: $color-surface-tertiary;
+  }
+}
+
+@mixin collapsible-content {
+  padding: $spacing-base;
+  border: 1px solid $color-border;
+  border-top: none;
+  border-radius: 0 0 $radius-base $radius-base;
+}
+
+// -----------------------------------------------------------------------------
+// Toast Notifications
+// -----------------------------------------------------------------------------
+@mixin toast {
+  position: fixed;
+  top: $spacing-lg;
+  right: $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-base;
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-lg;
+  z-index: $z-toast;
+  animation: slideIn 0.3s ease;
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+@mixin toast-success {
+  @include toast;
+  border-left: 4px solid $color-success;
+}
+
+@mixin toast-error {
+  @include toast;
+  border-left: 4px solid $color-error;
+}
+
+// -----------------------------------------------------------------------------
+// Modal
+// -----------------------------------------------------------------------------
+@mixin modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: $z-modal-backdrop;
+}
+
+@mixin modal-content {
+  background: $color-surface;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: $shadow-lg;
+  z-index: $z-modal;
+}
+
+// -----------------------------------------------------------------------------
+// Utility Mixins
+// -----------------------------------------------------------------------------
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

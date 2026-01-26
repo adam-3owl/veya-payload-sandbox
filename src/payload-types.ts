@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    icons: Icon;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,17 +79,26 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    icons: IconsSelect<false> | IconsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'theme-editor': ThemeEditor;
+    'mobile-app-settings': MobileAppSetting;
+    'apps-integrations': AppsIntegration;
+  };
+  globalsSelect: {
+    'theme-editor': ThemeEditorSelect<false> | ThemeEditorSelect<true>;
+    'mobile-app-settings': MobileAppSettingsSelect<false> | MobileAppSettingsSelect<true>;
+    'apps-integrations': AppsIntegrationsSelect<false> | AppsIntegrationsSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -121,7 +131,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -145,7 +155,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -160,11 +170,37 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * SVG icons for navigation and UI elements
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "icons".
+ */
+export interface Icon {
+  id: number;
+  /**
+   * A descriptive name for this icon
+   */
+  name: string;
+  /**
+   * Category to organize icons
+   */
+  category?: ('navigation' | 'actions' | 'status' | 'other') | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -181,20 +217,24 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'icons';
+        value: number | Icon;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -204,10 +244,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -227,7 +267,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -275,6 +315,23 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "icons_select".
+ */
+export interface IconsSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -312,6 +369,919 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme-editor".
+ */
+export interface ThemeEditor {
+  id: number;
+  styles?: {
+    brandPrimaryLight?: string | null;
+    brandPrimaryLight400?: string | null;
+    brandPrimaryLight200?: string | null;
+    brandPrimaryLight50?: string | null;
+    brandPrimaryDark?: string | null;
+    brandPrimaryDark400?: string | null;
+    brandPrimaryDark200?: string | null;
+    brandPrimaryDark50?: string | null;
+    brandSecondarySlot1?: string | null;
+    brandSecondarySlot2?: string | null;
+    brandSecondarySlot3?: string | null;
+    brandSecondarySlot4?: string | null;
+    surfaceLight?: string | null;
+    surfaceStripe?: string | null;
+    surfaceDark?: string | null;
+    textDark?: string | null;
+    textMedium?: string | null;
+    textLight?: string | null;
+    textAccent?: string | null;
+    borderLight?: string | null;
+    borderDark?: string | null;
+    borderExtraLight?: string | null;
+    utilityWarning?: string | null;
+    utilityPositive?: string | null;
+    utilityFailure?: string | null;
+    utilityFocus?: string | null;
+    utilityNativeControl?: string | null;
+    fieldBorderInactive?: string | null;
+    fieldBorderActive?: string | null;
+    fieldError?: string | null;
+    fieldPlaceholder?: string | null;
+    fieldInput?: string | null;
+    overlayDark?: string | null;
+    actionPrimary?: {
+      bgActive?: string | null;
+      bgInactive?: string | null;
+      bgHover?: string | null;
+      bgPressed?: string | null;
+      surfaceActive?: string | null;
+      surfaceInactive?: string | null;
+      surfaceHover?: string | null;
+      surfacePressed?: string | null;
+    };
+    actionSecondary?: {
+      bgActive?: string | null;
+      bgInactive?: string | null;
+      bgHover?: string | null;
+      bgPressed?: string | null;
+      surfaceActive?: string | null;
+      surfaceInactive?: string | null;
+      surfaceHover?: string | null;
+      surfacePressed?: string | null;
+    };
+    actionText?: {
+      surfaceActive?: string | null;
+      surfaceInactive?: string | null;
+      surfaceHover?: string | null;
+      surfacePressed?: string | null;
+    };
+    fontFamilyHeading?: string | null;
+    fontFamilyBody?: string | null;
+    fontFamilyAccent?: string | null;
+    fontFamilyAction?: string | null;
+    fontWeightLight?: string | null;
+    fontWeightRegular?: string | null;
+    fontWeightMedium?: string | null;
+    fontWeightSemiBold?: string | null;
+    fontWeightBold?: string | null;
+    fontWeightExtraBold?: string | null;
+    lineHeightSmall?: string | null;
+    lineHeightMedium?: string | null;
+    lineHeightTall?: string | null;
+    letterSpacingTight?: string | null;
+    letterSpacingWide?: string | null;
+    desktopFontSizeDisplay?: {
+      xxl?: string | null;
+      xl?: string | null;
+      lg?: string | null;
+      md?: string | null;
+      sm?: string | null;
+    };
+    desktopFontSizeHeadline?: {
+      xxl?: string | null;
+      xl?: string | null;
+      lg?: string | null;
+      md?: string | null;
+      sm?: string | null;
+      xs?: string | null;
+    };
+    desktopFontSizeBody?: {
+      xxl?: string | null;
+      xl?: string | null;
+      lg?: string | null;
+      md?: string | null;
+      sm?: string | null;
+      xs?: string | null;
+    };
+    mobileFontSizeDisplay?: {
+      xxl?: string | null;
+      xl?: string | null;
+      lg?: string | null;
+      md?: string | null;
+      sm?: string | null;
+    };
+    mobileFontSizeHeadline?: {
+      xxl?: string | null;
+      xl?: string | null;
+      lg?: string | null;
+      md?: string | null;
+      sm?: string | null;
+      xs?: string | null;
+    };
+    mobileFontSizeBody?: {
+      xxl?: string | null;
+      xl?: string | null;
+      lg?: string | null;
+      md?: string | null;
+      sm?: string | null;
+      xs?: string | null;
+    };
+    desktopSpacingVertical?: {
+      tiny?: string | null;
+      small?: string | null;
+      medium?: string | null;
+      large?: string | null;
+      xlarge?: string | null;
+      xxlarge?: string | null;
+      jumbo?: string | null;
+      mega?: string | null;
+      ultra?: string | null;
+      giga?: string | null;
+      titan?: string | null;
+      colosal?: string | null;
+    };
+    desktopSpacingHorizontal?: {
+      small?: string | null;
+      medium?: string | null;
+      large?: string | null;
+      xlarge?: string | null;
+      xxlarge?: string | null;
+      jumbo?: string | null;
+      mega?: string | null;
+      ultra?: string | null;
+      giga?: string | null;
+      titan?: string | null;
+      colosal?: string | null;
+    };
+    mobileSpacingVertical?: {
+      tiny?: string | null;
+      small?: string | null;
+      medium?: string | null;
+      large?: string | null;
+      xlarge?: string | null;
+      xxlarge?: string | null;
+      jumbo?: string | null;
+      mega?: string | null;
+      ultra?: string | null;
+      giga?: string | null;
+      titan?: string | null;
+      colosal?: string | null;
+    };
+    mobileSpacingHorizontal?: {
+      small?: string | null;
+      medium?: string | null;
+      large?: string | null;
+      xlarge?: string | null;
+      xxlarge?: string | null;
+      jumbo?: string | null;
+      mega?: string | null;
+      ultra?: string | null;
+      giga?: string | null;
+      titan?: string | null;
+      colosal?: string | null;
+    };
+    radiusXxSmall?: string | null;
+    radiusExtraSmall?: string | null;
+    radiusSmall?: string | null;
+    radiusMedium?: string | null;
+    radiusLarge?: string | null;
+    radiusFull?: string | null;
+    elevation0?: string | null;
+    elevation1?: string | null;
+    elevation2?: string | null;
+    elevation3?: string | null;
+    elevation4?: string | null;
+    elevation5?: string | null;
+    strokeSmall?: string | null;
+    strokeMedium?: string | null;
+    strokeLarge?: string | null;
+    opacityDisabled?: number | null;
+    opacityOverlay?: number | null;
+    opacityHover?: number | null;
+    opacityFocus?: number | null;
+    durationXs?: string | null;
+    durationSm?: string | null;
+    durationMd?: string | null;
+    durationLg?: string | null;
+    durationXl?: string | null;
+    easingStandard?: ('cubic-bezier(0.4, 0, 0.2, 1)' | 'ease' | 'ease-in-out' | 'linear') | null;
+    easingDecelerate?: ('cubic-bezier(0, 0, 0.2, 1)' | 'ease-out') | null;
+    easingAccelerate?: ('cubic-bezier(0.4, 0, 1, 1)' | 'ease-in') | null;
+    breakpointSmall?: string | null;
+    breakpointMedium?: string | null;
+    breakpointLarge?: string | null;
+    containerSmall?: string | null;
+    containerLarge?: string | null;
+  };
+  settings?: {
+    /**
+     * Allow users to toggle between light and dark themes
+     */
+    enableDarkMode?: boolean | null;
+    /**
+     * Enable motion and transition effects throughout the site
+     */
+    enableAnimations?: boolean | null;
+    /**
+     * Keep the header fixed at the top when scrolling
+     */
+    enableStickyHeader?: boolean | null;
+    /**
+     * Show a button to scroll back to the top of the page
+     */
+    enableBackToTop?: boolean | null;
+    /**
+     * Show breadcrumb navigation on interior pages
+     */
+    enableBreadcrumbs?: boolean | null;
+    /**
+     * Allow users to preview products without leaving the page
+     */
+    enableQuickView?: boolean | null;
+    /**
+     * Allow users to save products to a wishlist
+     */
+    enableWishlist?: boolean | null;
+    /**
+     * Allow users to compare multiple products
+     */
+    enableCompare?: boolean | null;
+    /**
+     * Show customer reviews on product pages
+     */
+    enableReviews?: boolean | null;
+    /**
+     * Show recently viewed products
+     */
+    enableRecentlyViewed?: boolean | null;
+    /**
+     * Allow users to sign up for back-in-stock alerts
+     */
+    enableStockNotify?: boolean | null;
+    /**
+     * Use expanded mega menu for main navigation
+     */
+    enableMegaMenu?: boolean | null;
+    /**
+     * Enable the search functionality
+     */
+    enableSearch?: boolean | null;
+    /**
+     * Show autocomplete suggestions in search
+     */
+    enableSearchSuggestions?: boolean | null;
+    /**
+     * Use a drawer-style menu on mobile
+     */
+    enableMobileDrawer?: boolean | null;
+    /**
+     * Lazy load images and components below the fold
+     */
+    enableLazyLoad?: boolean | null;
+    /**
+     * Automatically optimize images for web
+     */
+    enableImageOptimization?: boolean | null;
+    /**
+     * Prefetch linked pages on hover
+     */
+    enablePrefetch?: boolean | null;
+    /**
+     * Show an announcement bar at the top of the site
+     */
+    enableAnnouncement?: boolean | null;
+    /**
+     * Enable promotional popup modals
+     */
+    enablePopups?: boolean | null;
+    /**
+     * Show newsletter signup in footer
+     */
+    enableNewsletterFooter?: boolean | null;
+    /**
+     * Show social proof notifications
+     */
+    enableSocialProof?: boolean | null;
+    /**
+     * Add skip-to-content links for screen readers
+     */
+    enableSkipLinks?: boolean | null;
+    /**
+     * Honor user preference for reduced motion
+     */
+    enableReducedMotion?: boolean | null;
+    /**
+     * Allow users to enable high contrast mode
+     */
+    enableHighContrast?: boolean | null;
+    /**
+     * Allow users to adjust font size
+     */
+    enableFontScaling?: boolean | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-app-settings".
+ */
+export interface MobileAppSetting {
+  id: number;
+  navigation?: {
+    /**
+     * Add, remove, and reorder navigation items. Drag to rearrange.
+     */
+    items?:
+      | {
+          label: string;
+          /**
+           * The screen this navigation item links to
+           */
+          route: 'home' | 'locations' | 'menu' | 'loyalty' | 'reorder' | 'bag';
+          /**
+           * SVG icon shown when this tab is not selected
+           */
+          inactiveIcon?: (number | null) | Icon;
+          /**
+           * SVG icon shown when this tab is selected
+           */
+          activeIcon?: (number | null) | Icon;
+          id?: string | null;
+        }[]
+      | null;
+    showTabLabels?: boolean | null;
+    hapticFeedback?: boolean | null;
+    iosStyle?: ('liquid-glass' | 'flat') | null;
+    androidStyle?: 'flat' | null;
+    position?: ('fixed' | 'floating') | null;
+    floatingDropShadow?: ('none' | 'elevation1' | 'elevation2' | 'elevation3' | 'elevation4' | 'elevation5') | null;
+    backgroundColor?: string | null;
+    tabInactiveColor?: string | null;
+    tabActiveColor?: string | null;
+    activeIndicatorColor?: string | null;
+    swipeNavigation?: boolean | null;
+    pullToRefresh?: boolean | null;
+  };
+  homeScreen?: {
+    /**
+     * Content blocks shown to users who are not logged in
+     */
+    guestSections?:
+      | {
+          blockType:
+            | 'full-screen-image'
+            | 'text-with-cta'
+            | 'order-again'
+            | 'menu-categories'
+            | 'image-with-text'
+            | 'rewards-indicator';
+          title?: string | null;
+          enabled?: boolean | null;
+          config?:
+            | {
+                [k: string]: unknown;
+              }
+            | unknown[]
+            | string
+            | number
+            | boolean
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Content blocks shown to logged-in customers
+     */
+    customerSections?:
+      | {
+          blockType:
+            | 'full-screen-image'
+            | 'text-with-cta'
+            | 'order-again'
+            | 'menu-categories'
+            | 'image-with-text'
+            | 'rewards-indicator';
+          title?: string | null;
+          enabled?: boolean | null;
+          config?:
+            | {
+                [k: string]: unknown;
+              }
+            | unknown[]
+            | string
+            | number
+            | boolean
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  locations?: {
+    enableLocationServices?: boolean | null;
+    defaultView?: ('map' | 'list') | null;
+    searchRadius?: string | null;
+    showHours?: boolean | null;
+    showPhone?: boolean | null;
+    showDirections?: boolean | null;
+    showAmenities?: boolean | null;
+    mapProvider?: ('apple' | 'google') | null;
+    showTraffic?: boolean | null;
+    clusterMarkers?: boolean | null;
+  };
+  menu?: {
+    layout?: ('grid' | 'list' | 'compact') | null;
+    showImages?: boolean | null;
+    showPrices?: boolean | null;
+    showDescriptions?: boolean | null;
+    enableCategoryFilters?: boolean | null;
+    enableDietaryFilters?: boolean | null;
+    enableSearch?: boolean | null;
+    enableSort?: boolean | null;
+    showNutritionInfo?: boolean | null;
+    showAllergenInfo?: boolean | null;
+    enableCustomization?: boolean | null;
+    enableFavorites?: boolean | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "apps-integrations".
+ */
+export interface AppsIntegration {
+  id: number;
+  google?: {
+    /**
+     * Your Google Analytics 4 Measurement ID
+     */
+    analyticsId?: string | null;
+    /**
+     * Your Meta (Facebook) Pixel ID
+     */
+    metaPixel?: string | null;
+    /**
+     * Public site key for Google reCAPTCHA
+     */
+    recaptchaSiteKey?: string | null;
+    /**
+     * Secret key for server-side verification (keep this private)
+     */
+    recaptchaSecretKey?: string | null;
+  };
+  pushNotifications?: {
+    /**
+     * Select your push notification provider
+     */
+    provider?: ('none' | 'attentive' | 'onesignal') | null;
+    /**
+     * Your Attentive API key
+     */
+    attentiveApiKey?: string | null;
+    /**
+     * Your Attentive company identifier
+     */
+    attentiveCompanyId?: string | null;
+    /**
+     * Source ID for tracking sign-up origins
+     */
+    attentiveSignUpSourceId?: string | null;
+    /**
+     * Your OneSignal App ID
+     */
+    oneSignalAppId?: string | null;
+    /**
+     * Your OneSignal REST API Key (keep this private)
+     */
+    oneSignalApiKey?: string | null;
+    /**
+     * Optional: Safari Web Push ID for Safari browser support
+     */
+    oneSignalSafariWebId?: string | null;
+  };
+  customCode?: {
+    /**
+     * Code to inject into the <head> section of every page
+     */
+    headCode?: string | null;
+    /**
+     * Code to inject before the closing </body> tag
+     */
+    footerCode?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme-editor_select".
+ */
+export interface ThemeEditorSelect<T extends boolean = true> {
+  styles?:
+    | T
+    | {
+        brandPrimaryLight?: T;
+        brandPrimaryLight400?: T;
+        brandPrimaryLight200?: T;
+        brandPrimaryLight50?: T;
+        brandPrimaryDark?: T;
+        brandPrimaryDark400?: T;
+        brandPrimaryDark200?: T;
+        brandPrimaryDark50?: T;
+        brandSecondarySlot1?: T;
+        brandSecondarySlot2?: T;
+        brandSecondarySlot3?: T;
+        brandSecondarySlot4?: T;
+        surfaceLight?: T;
+        surfaceStripe?: T;
+        surfaceDark?: T;
+        textDark?: T;
+        textMedium?: T;
+        textLight?: T;
+        textAccent?: T;
+        borderLight?: T;
+        borderDark?: T;
+        borderExtraLight?: T;
+        utilityWarning?: T;
+        utilityPositive?: T;
+        utilityFailure?: T;
+        utilityFocus?: T;
+        utilityNativeControl?: T;
+        fieldBorderInactive?: T;
+        fieldBorderActive?: T;
+        fieldError?: T;
+        fieldPlaceholder?: T;
+        fieldInput?: T;
+        overlayDark?: T;
+        actionPrimary?:
+          | T
+          | {
+              bgActive?: T;
+              bgInactive?: T;
+              bgHover?: T;
+              bgPressed?: T;
+              surfaceActive?: T;
+              surfaceInactive?: T;
+              surfaceHover?: T;
+              surfacePressed?: T;
+            };
+        actionSecondary?:
+          | T
+          | {
+              bgActive?: T;
+              bgInactive?: T;
+              bgHover?: T;
+              bgPressed?: T;
+              surfaceActive?: T;
+              surfaceInactive?: T;
+              surfaceHover?: T;
+              surfacePressed?: T;
+            };
+        actionText?:
+          | T
+          | {
+              surfaceActive?: T;
+              surfaceInactive?: T;
+              surfaceHover?: T;
+              surfacePressed?: T;
+            };
+        fontFamilyHeading?: T;
+        fontFamilyBody?: T;
+        fontFamilyAccent?: T;
+        fontFamilyAction?: T;
+        fontWeightLight?: T;
+        fontWeightRegular?: T;
+        fontWeightMedium?: T;
+        fontWeightSemiBold?: T;
+        fontWeightBold?: T;
+        fontWeightExtraBold?: T;
+        lineHeightSmall?: T;
+        lineHeightMedium?: T;
+        lineHeightTall?: T;
+        letterSpacingTight?: T;
+        letterSpacingWide?: T;
+        desktopFontSizeDisplay?:
+          | T
+          | {
+              xxl?: T;
+              xl?: T;
+              lg?: T;
+              md?: T;
+              sm?: T;
+            };
+        desktopFontSizeHeadline?:
+          | T
+          | {
+              xxl?: T;
+              xl?: T;
+              lg?: T;
+              md?: T;
+              sm?: T;
+              xs?: T;
+            };
+        desktopFontSizeBody?:
+          | T
+          | {
+              xxl?: T;
+              xl?: T;
+              lg?: T;
+              md?: T;
+              sm?: T;
+              xs?: T;
+            };
+        mobileFontSizeDisplay?:
+          | T
+          | {
+              xxl?: T;
+              xl?: T;
+              lg?: T;
+              md?: T;
+              sm?: T;
+            };
+        mobileFontSizeHeadline?:
+          | T
+          | {
+              xxl?: T;
+              xl?: T;
+              lg?: T;
+              md?: T;
+              sm?: T;
+              xs?: T;
+            };
+        mobileFontSizeBody?:
+          | T
+          | {
+              xxl?: T;
+              xl?: T;
+              lg?: T;
+              md?: T;
+              sm?: T;
+              xs?: T;
+            };
+        desktopSpacingVertical?:
+          | T
+          | {
+              tiny?: T;
+              small?: T;
+              medium?: T;
+              large?: T;
+              xlarge?: T;
+              xxlarge?: T;
+              jumbo?: T;
+              mega?: T;
+              ultra?: T;
+              giga?: T;
+              titan?: T;
+              colosal?: T;
+            };
+        desktopSpacingHorizontal?:
+          | T
+          | {
+              small?: T;
+              medium?: T;
+              large?: T;
+              xlarge?: T;
+              xxlarge?: T;
+              jumbo?: T;
+              mega?: T;
+              ultra?: T;
+              giga?: T;
+              titan?: T;
+              colosal?: T;
+            };
+        mobileSpacingVertical?:
+          | T
+          | {
+              tiny?: T;
+              small?: T;
+              medium?: T;
+              large?: T;
+              xlarge?: T;
+              xxlarge?: T;
+              jumbo?: T;
+              mega?: T;
+              ultra?: T;
+              giga?: T;
+              titan?: T;
+              colosal?: T;
+            };
+        mobileSpacingHorizontal?:
+          | T
+          | {
+              small?: T;
+              medium?: T;
+              large?: T;
+              xlarge?: T;
+              xxlarge?: T;
+              jumbo?: T;
+              mega?: T;
+              ultra?: T;
+              giga?: T;
+              titan?: T;
+              colosal?: T;
+            };
+        radiusXxSmall?: T;
+        radiusExtraSmall?: T;
+        radiusSmall?: T;
+        radiusMedium?: T;
+        radiusLarge?: T;
+        radiusFull?: T;
+        elevation0?: T;
+        elevation1?: T;
+        elevation2?: T;
+        elevation3?: T;
+        elevation4?: T;
+        elevation5?: T;
+        strokeSmall?: T;
+        strokeMedium?: T;
+        strokeLarge?: T;
+        opacityDisabled?: T;
+        opacityOverlay?: T;
+        opacityHover?: T;
+        opacityFocus?: T;
+        durationXs?: T;
+        durationSm?: T;
+        durationMd?: T;
+        durationLg?: T;
+        durationXl?: T;
+        easingStandard?: T;
+        easingDecelerate?: T;
+        easingAccelerate?: T;
+        breakpointSmall?: T;
+        breakpointMedium?: T;
+        breakpointLarge?: T;
+        containerSmall?: T;
+        containerLarge?: T;
+      };
+  settings?:
+    | T
+    | {
+        enableDarkMode?: T;
+        enableAnimations?: T;
+        enableStickyHeader?: T;
+        enableBackToTop?: T;
+        enableBreadcrumbs?: T;
+        enableQuickView?: T;
+        enableWishlist?: T;
+        enableCompare?: T;
+        enableReviews?: T;
+        enableRecentlyViewed?: T;
+        enableStockNotify?: T;
+        enableMegaMenu?: T;
+        enableSearch?: T;
+        enableSearchSuggestions?: T;
+        enableMobileDrawer?: T;
+        enableLazyLoad?: T;
+        enableImageOptimization?: T;
+        enablePrefetch?: T;
+        enableAnnouncement?: T;
+        enablePopups?: T;
+        enableNewsletterFooter?: T;
+        enableSocialProof?: T;
+        enableSkipLinks?: T;
+        enableReducedMotion?: T;
+        enableHighContrast?: T;
+        enableFontScaling?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-app-settings_select".
+ */
+export interface MobileAppSettingsSelect<T extends boolean = true> {
+  navigation?:
+    | T
+    | {
+        items?:
+          | T
+          | {
+              label?: T;
+              route?: T;
+              inactiveIcon?: T;
+              activeIcon?: T;
+              id?: T;
+            };
+        showTabLabels?: T;
+        hapticFeedback?: T;
+        iosStyle?: T;
+        androidStyle?: T;
+        position?: T;
+        floatingDropShadow?: T;
+        backgroundColor?: T;
+        tabInactiveColor?: T;
+        tabActiveColor?: T;
+        activeIndicatorColor?: T;
+        swipeNavigation?: T;
+        pullToRefresh?: T;
+      };
+  homeScreen?:
+    | T
+    | {
+        guestSections?:
+          | T
+          | {
+              blockType?: T;
+              title?: T;
+              enabled?: T;
+              config?: T;
+              id?: T;
+            };
+        customerSections?:
+          | T
+          | {
+              blockType?: T;
+              title?: T;
+              enabled?: T;
+              config?: T;
+              id?: T;
+            };
+      };
+  locations?:
+    | T
+    | {
+        enableLocationServices?: T;
+        defaultView?: T;
+        searchRadius?: T;
+        showHours?: T;
+        showPhone?: T;
+        showDirections?: T;
+        showAmenities?: T;
+        mapProvider?: T;
+        showTraffic?: T;
+        clusterMarkers?: T;
+      };
+  menu?:
+    | T
+    | {
+        layout?: T;
+        showImages?: T;
+        showPrices?: T;
+        showDescriptions?: T;
+        enableCategoryFilters?: T;
+        enableDietaryFilters?: T;
+        enableSearch?: T;
+        enableSort?: T;
+        showNutritionInfo?: T;
+        showAllergenInfo?: T;
+        enableCustomization?: T;
+        enableFavorites?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "apps-integrations_select".
+ */
+export interface AppsIntegrationsSelect<T extends boolean = true> {
+  google?:
+    | T
+    | {
+        analyticsId?: T;
+        metaPixel?: T;
+        recaptchaSiteKey?: T;
+        recaptchaSecretKey?: T;
+      };
+  pushNotifications?:
+    | T
+    | {
+        provider?: T;
+        attentiveApiKey?: T;
+        attentiveCompanyId?: T;
+        attentiveSignUpSourceId?: T;
+        oneSignalAppId?: T;
+        oneSignalApiKey?: T;
+        oneSignalSafariWebId?: T;
+      };
+  customCode?:
+    | T
+    | {
+        headCode?: T;
+        footerCode?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,0 +1,119 @@
+// Shared Slider Styles
+// All range sliders in the application should use these classes for consistency
+
+.slider {
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__track {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    background: transparent;
+    border-radius: 2px;
+
+    &::-webkit-slider-runnable-track {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--theme-elevation-200, #e5e7eb);
+    }
+
+    &::-moz-range-track {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--theme-elevation-200, #e5e7eb);
+      border: none;
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--theme-elevation-1000, #1a1a1a);
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      margin-top: -5px;
+    }
+
+    &::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--theme-elevation-1000, #1a1a1a);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__value {
+    display: flex;
+    align-items: center;
+    background: var(--theme-elevation-0, #ffffff);
+    border: 1px solid var(--theme-elevation-150, #e5e7eb);
+    border-radius: 4px;
+    padding: 4px 8px;
+    min-width: 65px;
+  }
+
+  &__input {
+    width: 36px;
+    border: none;
+    background: transparent;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    color: var(--theme-elevation-1000, #1a1a1a);
+    text-align: right;
+    outline: none;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    -moz-appearance: textfield;
+  }
+
+  &__unit {
+    font-size: 11px;
+    color: var(--theme-elevation-500, #6b7280);
+    margin-left: 2px;
+  }
+
+  // Preview variant for opacity sliders
+  &__preview {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background-color: var(--theme-elevation-800, #1f2937);
+    border: 1px solid var(--theme-elevation-200, #e5e7eb);
+    flex-shrink: 0;
+  }
+}
+
+// Field wrapper - consistent label styling
+.field {
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--theme-elevation-650, #6b7280);
+    margin-bottom: 6px;
+  }
+}

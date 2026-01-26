@@ -1,0 +1,29 @@
+// Theme Editor Layout - Clean styling
+
+// Minimal customizations that don't break the default layout
+.live-preview-iframe {
+  background: var(--theme-elevation-0);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &::before {
+    content: '';
+    display: block;
+    height: 36px;
+    background: var(--theme-elevation-100);
+    border-bottom: 1px solid var(--theme-elevation-200);
+    background-image: 
+      radial-gradient(circle at 18px 50%, #ff5f57 5px, transparent 5px),
+      radial-gradient(circle at 38px 50%, #febc2e 5px, transparent 5px),
+      radial-gradient(circle at 58px 50%, #28c840 5px, transparent 5px);
+  }
+}
+
+.live-preview-toolbar {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--theme-elevation-0);
+  border-radius: 8px;
+  border: 1px solid var(--theme-elevation-150);
+}
