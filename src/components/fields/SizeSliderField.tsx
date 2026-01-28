@@ -58,7 +58,7 @@ export const SizeSliderField: TextFieldClientComponent = ({ field, path }) => {
   return (
     <div className="size-slider-field">
       <label className="size-slider-field__label">
-        {field.label || field.name}
+        {typeof field.label === 'string' ? field.label : field.name}
       </label>
       <div className="size-slider-field__controls">
         <input

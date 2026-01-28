@@ -37,7 +37,7 @@ export const OpacitySliderField: NumberFieldClientComponent = ({ field, path }) 
   return (
     <div className="opacity-slider-field">
       <label className="opacity-slider-field__label">
-        {field.label || field.name}
+        {typeof field.label === 'string' ? field.label : field.name}
       </label>
       <div className="opacity-slider-field__controls">
         <div 

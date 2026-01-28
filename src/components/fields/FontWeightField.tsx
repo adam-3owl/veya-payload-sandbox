@@ -31,7 +31,7 @@ export const FontWeightField: TextFieldClientComponent = ({ field, path }) => {
   return (
     <div className="font-weight-field">
       <label className="font-weight-field__label">
-        {field.label || field.name}
+        {typeof field.label === 'string' ? field.label : field.name}
       </label>
       <div className="font-weight-field__select-wrapper">
         <select

@@ -80,7 +80,7 @@ export const ColorPickerField: TextFieldClientComponent = ({ field, path }) => {
   return (
     <div className="color-picker-field" ref={pickerRef}>
       <label className="color-picker-field__label">
-        {field.label || field.name}
+        {typeof field.label === 'string' ? field.label : field.name}
       </label>
       <div className="color-picker-field__input-wrapper">
         <button
