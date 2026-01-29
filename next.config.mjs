@@ -12,7 +12,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '*.vercel.app',
+        hostname: 'veya-payload-sandbox.vercel.app',
       },
     ],
     // Use Vercel's image optimization
