@@ -8,6 +8,8 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Icons } from './collections/Icons'
+import { Overview } from './globals/Overview'
+import { Reports } from './globals/Reports'
 import { ThemeEditor } from './globals/ThemeEditor'
 import { MobileAppSettings } from './globals/MobileAppSettings'
 import { AppsIntegrations } from './globals/AppsIntegrations'
@@ -41,7 +43,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Icons],
-  globals: [ThemeEditor, MobileAppSettings, AppsIntegrations],
+  globals: [Overview, Reports, ThemeEditor, MobileAppSettings, AppsIntegrations],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -50,6 +52,7 @@ export default buildConfig({
   db: sqliteAdapter({
     client: {
       url: process.env.DATABASE_URL || '',
+      authToken: process.env.DATABASE_AUTH_TOKEN,
     },
   }),
   sharp,

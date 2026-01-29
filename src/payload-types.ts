@@ -90,11 +90,15 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    overview: Overview;
+    reports: Report;
     'theme-editor': ThemeEditor;
     'mobile-app-settings': MobileAppSetting;
     'apps-integrations': AppsIntegration;
   };
   globalsSelect: {
+    overview: OverviewSelect<false> | OverviewSelect<true>;
+    reports: ReportsSelect<false> | ReportsSelect<true>;
     'theme-editor': ThemeEditorSelect<false> | ThemeEditorSelect<true>;
     'mobile-app-settings': MobileAppSettingsSelect<false> | MobileAppSettingsSelect<true>;
     'apps-integrations': AppsIntegrationsSelect<false> | AppsIntegrationsSelect<true>;
@@ -369,6 +373,25 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "overview".
+ */
+export interface Overview {
+  id: number;
+  lastViewed?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reports".
+ */
+export interface Report {
+  id: number;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -885,6 +908,25 @@ export interface AppsIntegration {
   };
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "overview_select".
+ */
+export interface OverviewSelect<T extends boolean = true> {
+  lastViewed?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reports_select".
+ */
+export interface ReportsSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

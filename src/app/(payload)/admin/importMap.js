@@ -1,3 +1,5 @@
+import { default as default_f5f306dbca33fb28e00ab7aef51422e4 } from '../../../components/admin/AnalyticsOverviewView'
+import { default as default_8a1c00c3fa536fa6b2e9cba88133560d } from '../../../components/admin/PlaceholderField'
 import { default as default_87e6fdf26b30e91ac260af2076adce08 } from '../../../components/fields/ColorPickerField'
 import { default as default_94e48a5631a8aab4295a529385f54641 } from '../../../components/fields/FontWeightField'
 import { default as default_276b0ac2f81f7654f4c70818e4887d83 } from '../../../components/fields/SizeSliderField'
@@ -10,6 +12,8 @@ import { default as default_867a53523400afaaf669cef6ae9dab61 } from '../../../co
 import { CollectionCards as CollectionCards_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 
 export const importMap = {
+  "/components/admin/AnalyticsOverviewView#default": default_f5f306dbca33fb28e00ab7aef51422e4,
+  "/components/admin/PlaceholderField#default": default_8a1c00c3fa536fa6b2e9cba88133560d,
   "/components/fields/ColorPickerField#default": default_87e6fdf26b30e91ac260af2076adce08,
   "/components/fields/FontWeightField#default": default_94e48a5631a8aab4295a529385f54641,
   "/components/fields/SizeSliderField#default": default_276b0ac2f81f7654f4c70818e4887d83,

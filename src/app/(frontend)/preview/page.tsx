@@ -655,7 +655,8 @@ export default function PreviewPage() {
           setInitialData(data)
         }
       } catch (e) {
-        console.error('Failed to fetch theme:', e)
+        // API may not be available (e.g., no database configured)
+        // Preview will use default theme values
       }
     }
     fetchTheme()
