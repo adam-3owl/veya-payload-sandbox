@@ -142,7 +142,7 @@ export function ColorPicker({ label, value, onChange }: ColorPickerProps) {
               `,
             }}
             onClick={handleSaturationLightness}
-            onMouseDown={(e) => {
+            onMouseDown={(_e) => {
               const handleMove = (moveEvent: MouseEvent) => {
                 if (!saturationRef.current) return
                 const rect = saturationRef.current.getBoundingClientRect()

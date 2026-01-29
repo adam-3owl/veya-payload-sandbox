@@ -18,7 +18,7 @@ export const SizeSliderField: TextFieldClientComponent = ({ field, path }) => {
   const { value, setValue } = useField<string>({ path })
   
   // Get config from field.admin.custom or use defaults
-  const config: SizeSliderConfig = (field.admin as any)?.custom || {}
+  const config: SizeSliderConfig = (field.admin as { custom?: SizeSliderConfig })?.custom || {}
   const min = config.min ?? 0
   const max = config.max ?? 100
   const step = config.step ?? 1

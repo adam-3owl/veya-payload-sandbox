@@ -6,9 +6,9 @@ import type { CodeFieldClientProps } from 'payload'
 
 export default function CodeFieldWithSave(props: CodeFieldClientProps) {
   const { path } = props
-  const { value } = useField<string>({ path })
+  useField<string>({ path })
   const { submit } = useForm()
-  const { id } = useDocumentInfo()
+  useDocumentInfo()
   const [isSaving, setIsSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle')
 

@@ -1,0 +1,31 @@
+# Dependencies
+node_modules
+
+# Tests
+tests
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+vitest.config.mts
+playwright.config.ts
+
+# Development files
+.env.local
+*.log
+
+# IDE
+.vscode
+.idea
+
+# Documentation (keep for now, but can be ignored if large)
+# docs
+
+# Git
+.git
+.gitignore
+
+# Temporary files
+.next
+*.db
+*.db-journal

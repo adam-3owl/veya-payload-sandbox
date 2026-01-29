@@ -8,7 +8,7 @@ import { SelectInput } from '../fields/SelectInput'
 import { ImageUpload } from '../fields/ImageUpload'
 import { NumberInput } from '../fields/NumberInput'
 import { ColorPicker } from '../../shared/fields'
-import type { TabType, ContentBlock, FullScreenImageConfig, TextWithCTAConfig, OrderAgainConfig, MenuCategoriesConfig, MenuCategoryItem, BlockType } from '../types'
+import type { TabType, ContentBlock, FullScreenImageConfig, MenuCategoriesConfig, MenuCategoryItem, BlockType } from '../types'
 
 const blockTypes = [
   { value: 'full-screen-image', label: 'Full Screen Image', icon: Image, customerOnly: false },

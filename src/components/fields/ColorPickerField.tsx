@@ -113,16 +113,13 @@ export const ColorPickerField: TextFieldClientComponent = ({ field, path }) => {
               `,
             }}
             onClick={handleSaturationLightness}
-            onMouseDown={(e) => {
+            onMouseDown={(_e) => {
               const handleMove = (moveEvent: MouseEvent) => {
                 if (!saturationRef.current) return
                 const rect = saturationRef.current.getBoundingClientRect()
                 const x = Math.max(0, Math.min(1, (moveEvent.clientX - rect.left) / rect.width))
                 const y = Math.max(0, Math.min(1, (moveEvent.clientY - rect.top) / rect.height))
                 const newS = x * 100
-                const newL = (1 - y) * 50 + (1 - x) * 50 * (1 - y)
-                const adjustedL = 100 - y * 100
-                const newHsl = { ...hsl, s: newS, l: Math.max(0, Math.min(100, adjustedL - (100 - newS) * y * 0.5)) }
                 setHsl({ h: hsl.h, s: newS, l: 100 - y * 100 })
                 const newHex = hslToHex(hsl.h, newS, 100 - y * 100)
                 setInputValue(newHex)

@@ -10,7 +10,7 @@ export default async function MobileAppSettingsPage() {
     data = await payload.findGlobal({
       slug: 'mobile-app-settings',
     })
-  } catch (error) {
+  } catch (_error) {
     // Global may not exist yet, that's okay
     console.log('Mobile App Settings not found, using defaults')
   }

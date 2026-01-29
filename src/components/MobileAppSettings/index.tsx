@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useTheme } from '@payloadcms/ui'
 import type { MobileAppSetting } from '@/payload-types'
 import { MobileAppSettingsProvider } from './MobileAppSettingsContext'
