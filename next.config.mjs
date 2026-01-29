@@ -2,6 +2,9 @@ import { withPayload } from '@payloadcms/next/withPayload'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Externalize libsql for serverless (Vercel)
+  serverExternalPackages: ['libsql', '@libsql/client'],
+
   // Vercel optimization settings
   images: {
     remotePatterns: [

@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.3.3",
+    "@libsql/client": "^0.17.0",
     "@payloadcms/db-sqlite": "3.73.0",
     "@payloadcms/live-preview-react": "^3.73.0",
     "@payloadcms/next": "3.73.0",
@@ -28,6 +29,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "16.4.7",
     "graphql": "^16.8.1",
+    "libsql": "^0.5.22",
     "lucide-react": "^0.563.0",
     "next": "15.4.10",
     "payload": "3.73.0",
