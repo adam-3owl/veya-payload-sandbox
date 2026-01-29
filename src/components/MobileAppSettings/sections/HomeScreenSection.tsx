@@ -1606,7 +1606,7 @@ export function HomeScreenSection() {
                               })}
                               {getMenuCategories(index).length === 0 && (
                                 <div className="mas-block-config__empty">
-                                  No categories added. Click "Add Category" to create one.
+                                  No categories added. Click &quot;Add Category&quot; to create one.
                                 </div>
                               )}
                             </div>

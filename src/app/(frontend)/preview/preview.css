@@ -1,0 +1,769 @@
+/* ============================================================================
+   Preview Page Styles - Menu Design from Figma
+   All styles use CSS custom properties that map to theme editor tokens
+   ============================================================================ */
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.preview-page {
+  min-height: 100vh;
+  font-family: var(--font-family-body, "Stack Sans Text", sans-serif);
+  background-color: var(--color-surface-light, #ffffff);
+  color: var(--color-text-dark, #0b1f22);
+}
+
+/* ============================================================================
+   Top Navigation
+   ============================================================================ */
+
+.top-navigation {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Main Navigation Bar */
+.nav-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-v-jumbo, 24px) var(--spacing-h-mega, 32px);
+  background-color: var(--color-surface-light, #ffffff);
+  border-bottom: 1px solid var(--color-border-dark, #0b1f22);
+  position: relative;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.nav-mobile-menu {
+  display: none;
+  cursor: pointer;
+}
+
+.nav-mobile-menu svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-menu-list {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-h-jumbo, 24px);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  font-family: var(--font-family-body, "Stack Sans Text", sans-serif);
+  font-size: var(--font-size-body-lg, 16px);
+  line-height: 1.35;
+  color: var(--color-text-dark, #0b1f22);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.nav-item:hover {
+  color: var(--color-action-text-surface-hover, #fc5a44);
+}
+
+.nav-item.active {
+  font-weight: 700;
+  border-bottom: 3px solid var(--color-text-dark, #0b1f22);
+}
+
+.nav-item.dropdown {
+  gap: var(--spacing-h-tiny, 4px);
+}
+
+.nav-item.dropdown svg {
+  width: 10px;
+  height: 10px;
+}
+
+/* Center Logo */
+.nav-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-text {
+  font-family: var(--font-family-heading, "Owners", sans-serif);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--color-text-dark, #0b1f22);
+}
+
+.logo-image {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Right Navigation */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-h-ultra, 40px);
+}
+
+.nav-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--font-size-body-lg, 16px);
+  color: var(--color-text-dark, #0b1f22);
+  cursor: pointer;
+}
+
+.nav-account svg {
+  width: 24px;
+  height: 24px;
+}
+
+.nav-cart {
+  cursor: pointer;
+}
+
+.nav-cart svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Conveyance Bar */
+.nav-conveyance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-h-medium, 8px);
+  padding: var(--spacing-v-large, 12px);
+  background-color: var(--color-surface-light, #ffffff);
+  border-bottom: 1px solid var(--color-border-dark, #0b1f22);
+}
+
+.nav-conveyance svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-dark, #0b1f22);
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-h-small, 6px);
+  font-family: var(--font-family-body, "Stack Sans Text", sans-serif);
+  font-size: var(--font-size-body-md, 14px);
+  line-height: 1.35;
+  color: var(--color-text-dark, #0b1f22);
+}
+
+.location-info .dot {
+  margin: 0 2px;
+}
+
+.location-info .location-name {
+  font-weight: 700;
+}
+
+.location-info .dropdown-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-v-tiny, 4px);
+  border-radius: var(--radius-full, 1000px);
+}
+
+/* ============================================================================
+   Hero Section
+   ============================================================================ */
+
+.hero-section {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding: var(--spacing-v-titan, 60px) var(--spacing-h-mega, 32px);
+  min-height: 195px;
+}
+
+.hero-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-image {
+  position: absolute;
+  width: 100%;
+  height: 417px;
+  top: -127px;
+  left: 0;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  width: 100%;
+  height: 417px;
+  top: -127px;
+  background-color: var(--color-overlay-dark, rgba(11, 31, 34, 0.4));
+}
+
+.hero-title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-family-heading, "Owners", sans-serif);
+  font-size: var(--font-size-display-xl, 68px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--color-surface-light, #ffffff);
+  letter-spacing: var(--letter-spacing-root, 0);
+}
+
+/* ============================================================================
+   Menu Categories
+   ============================================================================ */
+
+.menu-categories {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-h-xlarge, 16px);
+  padding: var(--spacing-v-giga, 48px) var(--spacing-h-mega, 32px) var(--spacing-v-xxlarge, 20px);
+  background-color: var(--color-surface-light, #ffffff);
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: var(--spacing-v-tiny, 4px) var(--spacing-h-small, 6px);
+  background: none;
+  border: none;
+  border-bottom: var(--stroke-medium, 2px) solid transparent;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.category-item:hover {
+  opacity: 0.8;
+}
+
+.category-item.active {
+  opacity: 1;
+  border-bottom-color: var(--color-field-border-active, #0b1f22);
+}
+
+.category-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-name {
+  font-family: var(--font-family-heading, "Owners", sans-serif);
+  font-size: var(--font-size-headline-xs, 16px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-action-text-surface-active, #0b1f22);
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   Menu Grid
+   ============================================================================ */
+
+.menu-grid-section {
+  padding: var(--spacing-v-mega, 32px) 42px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================================
+   Menu Card
+   ============================================================================ */
+
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-border-dark, #0b1f22);
+  border-radius: var(--radius-extra-small, 8px);
+  background-color: var(--color-surface-light, #ffffff);
+  width: 100%;
+  max-width: 330px;
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 341.75 / 205;
+  background-color: var(--color-surface-light, #ffffff);
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg,
+    var(--color-surface-stripe, #f9f8f4) 0%,
+    var(--color-brand-primary-light-200, #f9f8f4) 50%,
+    var(--color-brand-primary-light, #2fddd0) 100%
+  );
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.card-title-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-v-xlarge, 16px) var(--spacing-h-xlarge, 16px);
+}
+
+.card-title {
+  font-family: var(--font-family-heading, "Owners", sans-serif);
+  font-size: var(--font-size-headline-sm, 24px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text-dark, #0b1f22);
+  text-align: center;
+  margin: 0;
+}
+
+.card-tag-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--spacing-v-xlarge, 16px);
+}
+
+.card-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: var(--color-brand-secondary-1, #fc5a44);
+  border-radius: 4px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+  color: var(--color-surface-light, #ffffff);
+  text-transform: uppercase;
+}
+
+.card-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #150764;
+}
+
+.card-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-v-large, 12px);
+  padding: var(--spacing-v-xlarge, 16px) var(--spacing-h-xlarge, 16px);
+}
+
+.card-description {
+  font-family: var(--font-family-body, "Stack Sans Text", sans-serif);
+  font-size: var(--font-size-body-md, 14px);
+  font-weight: var(--font-weight-regular, 400);
+  line-height: 1.35;
+  color: var(--color-text-medium, #405255);
+  text-align: center;
+  margin: 0;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-h-medium, 8px);
+  font-family: var(--font-family-body, "Stack Sans Text", sans-serif);
+  font-size: var(--font-size-body-sm, 12px);
+  font-weight: var(--font-weight-regular, 400);
+  line-height: 1.35;
+  color: var(--color-text-medium, #405255);
+}
+
+.card-meta .dot {
+  color: var(--color-text-medium, #405255);
+}
+
+/* ============================================================================
+   Footer
+   ============================================================================ */
+
+.footer {
+  background-color: var(--color-surface-light, #ffffff);
+  border-top: 1px solid var(--color-border-dark, #0b1f22);
+  padding: var(--spacing-v-ultra, 40px) var(--spacing-h-mega, 32px);
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-h-large, 12px);
+  justify-content: center;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.footer-column {
+  flex: 1 0 0;
+  min-width: 150px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-v-jumbo, 24px);
+}
+
+.footer-column.footer-spacer {
+  min-width: 100px;
+}
+
+.footer-column.footer-brand {
+  min-width: 220px;
+}
+
+/* Footer Logo */
+.footer-logo {
+  font-family: var(--font-family-heading, "Owners", sans-serif);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--color-text-dark, #0b1f22);
+}
+
+.footer-logo-image {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-copyright {
+  font-family: var(--font-family-body, "Stack Sans Text", sans-serif);
+  font-size: var(--font-size-body-md, 14px);
+  line-height: 1.35;
+  color: var(--color-text-dark, #0b1f22);
+  margin: 0;
+}
+
+/* Social Icons */
+.footer-social {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0.889px solid var(--color-surface-dark, #0b1f22);
+  border-radius: 89px;
+  padding: 5.333px;
+  color: var(--color-surface-dark, #0b1f22);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.social-icon:hover {
+  background-color: var(--color-surface-dark, #0b1f22);
+  color: var(--color-surface-light, #ffffff);
+}
+
+.social-icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+/* App Badges */
+.footer-apps {
+  display: flex;
+  gap: 8px;
+}
+
+.app-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #000;
+  border: 1px solid #a6a6a6;
+  border-radius: 6px;
+  text-decoration: none;
+  color: white;
+  min-width: 127px;
+  height: 42px;
+}
+
+.app-badge-icon {
+  width: 20px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.google-play .app-badge-icon {
+  width: 22px;
+  height: 25px;
+}
+
+.app-badge-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.app-badge-subtext {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.app-store .app-badge-subtext {
+  text-transform: none;
+}
+
+.google-play .app-badge-subtext {
+  font-family: 'Product Sans', sans-serif;
+  text-transform: uppercase;
+  font-size: 10.6px;
+  line-height: normal;
+}
+
+.app-badge-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+
+.google-play-text {
+  width: 78px;
+  height: 16px;
+  object-fit: contain;
+  transform: scaleY(-1);
+}
+
+/* Footer Links */
+.footer-heading {
+  font-family: var(--font-family-heading, "Owners", sans-serif);
+  font-size: var(--font-size-headline-xs, 16px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text-dark, #0b1f22);
+  margin: 0;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-v-small, 6px);
+}
+
+.footer-links a {
+  font-family: var(--font-family-body, "Stack Sans Text", sans-serif);
+  font-size: var(--font-size-body-md, 14px);
+  font-weight: var(--font-weight-regular, 400);
+  line-height: 1.35;
+  color: var(--color-text-dark, #0b1f22);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-links a:hover {
+  color: var(--color-action-text-surface-hover, #fc5a44);
+}
+
+/* ============================================================================
+   Responsive Adjustments
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  /* Mobile Navigation - matches Figma 390px design */
+  .nav-main {
+    padding: 16px 20px;
+  }
+
+  .nav-left {
+    flex: 1;
+  }
+
+  .nav-mobile-menu {
+    display: block;
+  }
+
+  .nav-menu-list {
+    display: none;
+  }
+
+  .nav-logo {
+    position: static;
+    transform: none;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .nav-right {
+    flex: 1;
+    justify-content: flex-end;
+    gap: 0;
+  }
+
+  .nav-account {
+    display: none;
+  }
+
+  .nav-cart svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Mobile Conveyance Bar */
+  .nav-conveyance {
+    height: 36px;
+    padding: 12px 20px;
+  }
+
+  .location-info {
+    font-size: 11px;
+  }
+
+  /* Mobile Hero - matches Figma */
+  .hero-section {
+    padding: 48px 20px;
+    min-height: 162px;
+  }
+
+  .hero-title {
+    font-size: 60px;
+  }
+
+  /* Mobile Menu Categories - horizontal scroll */
+  .menu-categories {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 24px 20px;
+    gap: 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .menu-categories::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-item {
+    flex-shrink: 0;
+  }
+
+  .category-name {
+    font-size: 12px;
+  }
+
+  /* Mobile Menu Grid - single column */
+  .menu-grid-section {
+    padding: 32px 24px;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .menu-card {
+    max-width: 342px;
+    margin: 0 auto;
+  }
+
+  /* Mobile Footer - stacked layout */
+  .footer {
+    padding: 32px 20px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .footer-column {
+    min-width: 100%;
+    padding: 0;
+    gap: 20px;
+  }
+
+  .footer-column.footer-brand {
+    gap: 20px;
+  }
+
+  .footer-copyright {
+    font-size: 12px;
+  }
+
+  .footer-column.footer-spacer {
+    display: none;
+  }
+}

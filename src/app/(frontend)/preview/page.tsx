@@ -3,17 +3,7 @@
 import { useLivePreview } from '@payloadcms/live-preview-react'
 import { useEffect, useState, useCallback } from 'react'
 import type { ThemeEditor as ThemeEditorType } from '@/payload-types'
-
-// Page templates available for preview
-const PREVIEW_PAGES = [
-  { id: 'home', label: 'Home', icon: '🏠' },
-  { id: 'product', label: 'Product', icon: '🛍️' },
-  { id: 'blog', label: 'Blog', icon: '📝' },
-  { id: 'form', label: 'Form', icon: '📋' },
-  { id: 'components', label: 'Components', icon: '🧩' },
-] as const
-
-type PageId = (typeof PREVIEW_PAGES)[number]['id']
+import './preview.css'
 
 // Default theme values for initial render
 const defaultTheme: Partial<ThemeEditorType> = {
@@ -28,10 +18,48 @@ const defaultTheme: Partial<ThemeEditorType> = {
     textMedium: '#405255',
     textLight: '#978f6f',
     textAccent: '#fc5a44',
+    borderDark: '#0b1f22',
+    borderLight: '#dbdbdb',
+    fieldBorderActive: '#0b1f22',
+    overlayDark: 'rgba(11, 31, 34, 0.4)',
     fontFamilyHeading: 'Owners',
     fontFamilyBody: 'Stack Sans Text',
     radiusMedium: '16px',
     radiusSmall: '12px',
+    radiusExtraSmall: '8px',
+    radiusFull: '1000px',
+    strokeMedium: '2px',
+    desktopSpacingVertical: {
+      tiny: '4px',
+      small: '6px',
+      large: '12px',
+      xlarge: '16px',
+      xxlarge: '20px',
+      jumbo: '24px',
+      mega: '32px',
+      ultra: '40px',
+      giga: '48px',
+      titan: '60px',
+    },
+    desktopSpacingHorizontal: {
+      small: '6px',
+      medium: '8px',
+      large: '12px',
+      xlarge: '16px',
+      mega: '32px',
+    },
+    desktopFontSizeDisplay: {
+      xl: '68px',
+    },
+    desktopFontSizeHeadline: {
+      sm: '24px',
+      xs: '16px',
+    },
+    desktopFontSizeBody: {
+      lg: '16px',
+      md: '14px',
+      sm: '12px',
+    },
   },
 }
 
@@ -73,6 +101,13 @@ function generateCSSVariables(theme: Partial<ThemeEditorType>): Record<string, s
   if (styles.borderLight) vars['--color-border-light'] = styles.borderLight
   if (styles.borderDark) vars['--color-border-dark'] = styles.borderDark
   if (styles.borderExtraLight) vars['--color-border-extra-light'] = styles.borderExtraLight
+
+  // Form Field Colors
+  if (styles.fieldBorderActive) vars['--color-field-border-active'] = styles.fieldBorderActive
+  if (styles.fieldBorderInactive) vars['--color-field-border-inactive'] = styles.fieldBorderInactive
+
+  // Overlay
+  if (styles.overlayDark) vars['--color-overlay-dark'] = styles.overlayDark
 
   // Utility Colors
   if (styles.utilityWarning) vars['--color-utility-warning'] = styles.utilityWarning
@@ -188,7 +223,7 @@ function generateCSSVariables(theme: Partial<ThemeEditorType>): Record<string, s
   if (styles.easingDecelerate) vars['--easing-decelerate'] = styles.easingDecelerate
   if (styles.easingAccelerate) vars['--easing-accelerate'] = styles.easingAccelerate
 
-  // Spacing
+  // Spacing - Vertical
   const dsv = styles.desktopSpacingVertical
   if (dsv) {
     if (dsv.tiny) vars['--spacing-v-tiny'] = dsv.tiny
@@ -204,6 +239,7 @@ function generateCSSVariables(theme: Partial<ThemeEditorType>): Record<string, s
     if (dsv.titan) vars['--spacing-v-titan'] = dsv.titan
     if (dsv.colosal) vars['--spacing-v-colosal'] = dsv.colosal
   }
+  // Spacing - Horizontal
   const dsh = styles.desktopSpacingHorizontal
   if (dsh) {
     if (dsh.small) vars['--spacing-h-small'] = dsh.small
@@ -240,273 +276,262 @@ function generateCSSVariables(theme: Partial<ThemeEditorType>): Record<string, s
   return vars
 }
 
-// Page selector navigation component
-function PageSelector({
-  currentPage,
-  onPageChange,
-}: {
-  currentPage: PageId
-  onPageChange: (page: PageId) => void
-}) {
+// ============================================================================
+// SVG Icons
+// ============================================================================
+
+const ChevronDownIcon = () => (
+  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.5 4L5 6.5L7.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const MenuIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3.5 7H24.5M3.5 14H24.5M3.5 21H24.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+)
+
+const UserIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+  </svg>
+)
+
+const BagIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 6H16C16 3.79 14.21 2 12 2C9.79 2 8 3.79 8 6H6C4.9 6 4 6.9 4 8V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8C20 6.9 19.1 6 18 6ZM12 4C13.1 4 14 4.9 14 6H10C10 4.9 10.9 4 12 4ZM18 20H6V8H8V10C8 10.55 8.45 11 9 11C9.55 11 10 10.55 10 10V8H14V10C14 10.55 14.45 11 15 11C15.55 11 16 10.55 16 10V8H18V20Z" fill="currentColor"/>
+  </svg>
+)
+
+const LocationIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 2C6.69 2 4 4.69 4 8C4 12.5 10 18 10 18C10 18 16 12.5 16 8C16 4.69 13.31 2 10 2ZM10 10.5C8.62 10.5 7.5 9.38 7.5 8C7.5 6.62 8.62 5.5 10 5.5C11.38 5.5 12.5 6.62 12.5 8C12.5 9.38 11.38 10.5 10 10.5Z" fill="currentColor"/>
+  </svg>
+)
+
+// Social Icons
+const InstagramIcon = () => (
+  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10.5 2.1C13.2 2.1 13.5 2.1 14.6 2.2C15.6 2.2 16.2 2.4 16.6 2.5C17.1 2.7 17.5 3 17.9 3.4C18.3 3.8 18.6 4.2 18.8 4.7C18.9 5.1 19.1 5.7 19.1 6.7C19.2 7.8 19.2 8.1 19.2 10.8C19.2 13.5 19.2 13.8 19.1 14.9C19.1 15.9 18.9 16.5 18.8 16.9C18.6 17.4 18.3 17.8 17.9 18.2C17.5 18.6 17.1 18.9 16.6 19.1C16.2 19.2 15.6 19.4 14.6 19.4C13.5 19.5 13.2 19.5 10.5 19.5C7.8 19.5 7.5 19.5 6.4 19.4C5.4 19.4 4.8 19.2 4.4 19.1C3.9 18.9 3.5 18.6 3.1 18.2C2.7 17.8 2.4 17.4 2.2 16.9C2.1 16.5 1.9 15.9 1.9 14.9C1.8 13.8 1.8 13.5 1.8 10.8C1.8 8.1 1.8 7.8 1.9 6.7C1.9 5.7 2.1 5.1 2.2 4.7C2.4 4.2 2.7 3.8 3.1 3.4C3.5 3 3.9 2.7 4.4 2.5C4.8 2.4 5.4 2.2 6.4 2.2C7.5 2.1 7.8 2.1 10.5 2.1ZM10.5 0C7.7 0 7.4 0 6.3 0.1C5.2 0.1 4.4 0.3 3.7 0.6C3 0.9 2.4 1.3 1.8 1.9C1.2 2.5 0.8 3.1 0.5 3.8C0.2 4.5 0 5.3 0 6.4C0 7.5 0 7.8 0 10.6C0 13.4 0 13.7 0.1 14.8C0.1 15.9 0.3 16.7 0.6 17.4C0.9 18.1 1.3 18.7 1.9 19.3C2.5 19.9 3.1 20.3 3.8 20.6C4.5 20.9 5.3 21.1 6.4 21.1C7.5 21.2 7.8 21.2 10.6 21.2C13.4 21.2 13.7 21.2 14.8 21.1C15.9 21.1 16.7 20.9 17.4 20.6C18.1 20.3 18.7 19.9 19.3 19.3C19.9 18.7 20.3 18.1 20.6 17.4C20.9 16.7 21.1 15.9 21.1 14.8C21.2 13.7 21.2 13.4 21.2 10.6C21.2 7.8 21.2 7.5 21.1 6.4C21.1 5.3 20.9 4.5 20.6 3.8C20.3 3.1 19.9 2.5 19.3 1.9C18.7 1.3 18.1 0.9 17.4 0.6C16.7 0.3 15.9 0.1 14.8 0.1C13.7 0 13.3 0 10.5 0Z" fill="currentColor"/>
+    <path d="M10.5 5.1C7.5 5.1 5.1 7.5 5.1 10.5C5.1 13.5 7.5 15.9 10.5 15.9C13.5 15.9 15.9 13.5 15.9 10.5C15.9 7.5 13.5 5.1 10.5 5.1ZM10.5 14C8.6 14 7 12.4 7 10.5C7 8.6 8.6 7 10.5 7C12.4 7 14 8.6 14 10.5C14 12.4 12.4 14 10.5 14Z" fill="currentColor"/>
+    <circle cx="16.1" cy="4.9" r="1.2" fill="currentColor"/>
+  </svg>
+)
+
+const TikTokIcon = () => (
+  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15.1 4.2C14.3 3.3 13.9 2.2 13.9 1H10.7V14C10.7 15.5 9.5 16.7 8 16.7C6.5 16.7 5.3 15.5 5.3 14C5.3 12.5 6.5 11.3 8 11.3C8.3 11.3 8.6 11.4 8.9 11.5V8.2C8.6 8.1 8.3 8.1 8 8.1C4.7 8.1 2 10.8 2 14.1C2 17.4 4.7 20.1 8 20.1C11.3 20.1 14 17.4 14 14.1V7.2C15.3 8.1 16.8 8.6 18.4 8.6V5.4C17.1 5.4 15.9 4.9 15.1 4.2Z" fill="currentColor"/>
+  </svg>
+)
+
+const TwitterIcon = () => (
+  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.5 9L19.2 1H17.5L11.8 7.9L7.2 1H1.5L8.5 11.5L1.5 20H3.2L9.2 12.6L14.1 20H19.8L12.5 9ZM10 11.4L9.3 10.4L3.7 2.2H6.5L10.6 8.2L11.3 9.2L17.5 18.9H14.7L10 11.4Z" fill="currentColor"/>
+  </svg>
+)
+
+const LinkedInIcon = () => (
+  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4.5 2.5C4.5 3.6 3.6 4.5 2.5 4.5C1.4 4.5 0.5 3.6 0.5 2.5C0.5 1.4 1.4 0.5 2.5 0.5C3.6 0.5 4.5 1.4 4.5 2.5ZM4.5 6H0.5V20H4.5V6ZM11 6H7V20H11V12.5C11 8.5 16 8.2 16 12.5V20H20V11.1C20 4.5 12.5 4.8 11 8.1V6Z" fill="currentColor"/>
+  </svg>
+)
+
+// Veya Logo SVG
+const VeyaLogo = ({ className }: { className?: string }) => (
+  <svg className={className} width="95" height="22" viewBox="0 0 95 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clipPath="url(#clip0_veya_logo)">
+      <path d="M7.83426 9.04217C6.9962 9.04217 6.45175 8.60568 6.36441 7.36012V0.62278H0V7.69434H0.00929111V9.1134C0.00929111 13.0985 2.22987 14.7933 5.71961 14.7933C11.9595 14.7933 20.1747 9.94255 20.1747 0.62278H13.7211C13.7211 6.6168 9.70549 9.04217 7.83426 9.04217Z" fill="#FC5A44"/>
+      <path d="M31.6678 0C25.4613 0 20.8455 2.63357 20.8455 7.38021C20.8455 12.1268 25.1826 14.7933 31.8778 14.7933C36.003 14.7933 39.2475 13.997 41.4309 12.6127L40.0911 9.45858C38.0824 10.359 35.6518 10.7754 32.831 10.7754C29.6925 10.7754 27.3995 9.87498 27.0836 8.28059H39.5299C40.4237 8.28059 41.141 7.93541 41.5591 7.36012C41.6279 7.26698 41.6892 7.16835 41.7412 7.06243V7.05878C41.7412 7.05878 41.7412 7.05512 41.7449 7.05512C41.8862 6.76291 41.9642 6.42869 41.9642 6.0616C41.9642 4.87448 41.4346 3.59605 40.2491 2.51669C38.664 1.07571 35.9064 0 31.6697 0L31.6678 0ZM35.2969 5.9575H27.1542C27.4366 4.71194 29.0923 3.84443 31.6659 3.84443C34.2396 3.84443 35.8265 4.81239 35.8265 5.64519C35.8265 5.85157 35.6853 5.9575 35.2969 5.9575Z" fill="#FC5A44"/>
+      <path d="M52.2364 8.59107C51.0992 8.59107 50.3671 7.92628 50.3373 6.59671V0.281254H43.9878V9.07687C43.9878 12.9925 46.1749 14.8316 49.7353 14.7933C53.6487 14.7586 56.8913 12.125 58.6176 8.52349C58.5488 8.93989 58.5117 9.42387 58.5117 9.80375V11.747C58.5117 15.8708 56.6107 17.8104 51.7775 17.8104C49.2763 17.8104 47.1598 17.394 45.151 16.6324L44.0584 20.3727C46.3496 21.4119 49.2763 22.0018 52.7307 22.0018C60.9459 22.0018 64.8575 18.2944 64.8575 12.3716V0.622778H58.7588C56.8541 6.06342 54.5629 8.59107 52.2364 8.59107Z" fill="#FC5A44"/>
+      <path d="M92.7791 9.42388C92.3202 9.80375 91.7571 10.0814 91.1569 10.0814C90.0643 10.0814 89.4994 9.35448 89.4994 8.00299V1.76789C86.4333 0.589905 82.9064 0 78.8183 0C71.5545 0 67.2193 3.46273 67.2193 8.28059C67.2193 12.3698 70.0754 14.7933 74.5872 14.7933C78.1141 14.7933 81.2173 13.0638 83.1554 10.0138C83.2242 13.4089 85.48 14.7933 88.8323 14.7933C91.0528 14.7933 92.8869 14.1029 94.1914 13.1313L92.7791 9.42388ZM83.1573 6.16752C81.5703 8.86867 79.032 9.90785 76.7408 9.90785C74.8362 9.90785 73.5688 9.00747 73.5688 7.48431C73.5688 5.57945 75.5776 4.29553 78.783 4.29553C80.3012 4.29553 81.745 4.46904 83.1573 4.81421V6.16752Z" fill="#FC5A44"/>
+    </g>
+    <defs>
+      <clipPath id="clip0_veya_logo">
+        <rect width="94.2857" height="22" fill="white"/>
+      </clipPath>
+    </defs>
+  </svg>
+)
+
+// ============================================================================
+// Figma Assets
+// ============================================================================
+
+// Category Icons from Figma
+const CATEGORY_ICONS: Record<string, string> = {
+  mezze: 'https://www.figma.com/api/mcp/asset/075e543c-7a34-4e12-a78a-0d7970da0d68',
+  wraps: 'https://www.figma.com/api/mcp/asset/c951be7e-53a7-44b0-9d08-7fb41b240cbe',
+  bowls: 'https://www.figma.com/api/mcp/asset/19869c2d-f241-4337-9c6a-a0b67f683513',
+  sandwiches: 'https://www.figma.com/api/mcp/asset/0a9b90c4-13c6-4dd1-bda3-430666a9dcca',
+  sides: 'https://www.figma.com/api/mcp/asset/ff5b43e5-49ff-4a5e-8fc8-89cbe3202cff',
+  soups: 'https://www.figma.com/api/mcp/asset/e7ab0f0f-6e5e-46f0-aada-975d04abc780',
+}
+
+// Product placeholder image from Figma
+const PRODUCT_IMAGE = 'https://www.figma.com/api/mcp/asset/5a169503-394b-4ae1-9104-afa487a8528f'
+
+// Hero background image from Figma
+const HERO_IMAGE = 'https://www.figma.com/api/mcp/asset/1300ae33-b856-4499-8a5f-a30e99e4c394'
+
+// App Store buttons from Figma
+const APP_STORE_ICON = 'https://www.figma.com/api/mcp/asset/1d0471ee-c2bb-4eb5-8098-86a5a57fd986'
+const GOOGLE_PLAY_ICON = 'https://www.figma.com/api/mcp/asset/f5a0f280-3eb9-4c4a-be87-9a0e70e7e81c'
+const GOOGLE_PLAY_TEXT = 'https://www.figma.com/api/mcp/asset/9446e4ce-8af1-4a31-8a1e-ae3e6982edea'
+
+const CategoryIcon = ({ name }: { name: string }) => {
+  const iconUrl = CATEGORY_ICONS[name]
+  if (iconUrl) {
+    return <img src={iconUrl} alt={name} style={{ width: '32px', height: '32px' }} />
+  }
+  return <span style={{ fontSize: '24px' }}>🍽️</span>
+}
+
+// ============================================================================
+// Components
+// ============================================================================
+
+// Top Navigation Component
+function TopNavigation() {
   return (
-    <nav
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '4px',
-        padding: '8px 16px',
-        background: 'var(--color-surface-dark, #0b1f22)',
-        borderBottom: '1px solid var(--color-border-dark, #1e5a67)',
-      }}
-    >
-      {PREVIEW_PAGES.map((page) => (
+    <div className="top-navigation">
+      {/* Main Nav Bar */}
+      <div className="nav-main">
+        <div className="nav-left">
+          <div className="nav-mobile-menu">
+            <MenuIcon />
+          </div>
+          <div className="nav-menu-list">
+            <div className="nav-item active">
+              <span>Menu</span>
+            </div>
+            <div className="nav-item">
+              <span>Locations</span>
+            </div>
+            <div className="nav-item">
+              <span>Catering</span>
+            </div>
+            <div className="nav-item dropdown">
+              <span>About</span>
+              <ChevronDownIcon />
+            </div>
+          </div>
+        </div>
+
+        {/* Center Logo */}
+        <div className="nav-logo">
+          <VeyaLogo className="logo-image" />
+        </div>
+
+        <div className="nav-right">
+          <div className="nav-account">
+            <UserIcon />
+            <span>Sign in</span>
+          </div>
+          <div className="nav-cart">
+            <BagIcon />
+          </div>
+        </div>
+      </div>
+
+      {/* Conveyance Bar */}
+      <div className="nav-conveyance">
+        <LocationIcon />
+        <div className="location-info">
+          <span>Pickup</span>
+          <span className="dot">•</span>
+          <span>Today, ASAP (20-30 Min)</span>
+          <span className="dot">•</span>
+          <span className="location-name">Main Street</span>
+          <div className="dropdown-icon">
+            <ChevronDownIcon />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Hero Section
+function HeroSection() {
+  return (
+    <div className="hero-section">
+      <div className="hero-background">
+        <img src={HERO_IMAGE} alt="" className="hero-image" />
+        <div className="hero-overlay" />
+      </div>
+      <h1 className="hero-title">Menu</h1>
+    </div>
+  )
+}
+
+// Menu Categories
+const CATEGORIES = [
+  { id: 'mezze', name: 'Mezze & Small Plates', icon: 'mezze' },
+  { id: 'wraps', name: 'Wraps & Pitas', icon: 'wraps' },
+  { id: 'bowls', name: 'Bowls', icon: 'bowls' },
+  { id: 'sandwiches', name: 'Sandwiches & Mains', icon: 'sandwiches' },
+  { id: 'sides', name: 'Sides', icon: 'sides' },
+  { id: 'soups', name: 'Soups & Salads', icon: 'soups' },
+]
+
+function MenuCategories({ activeCategory, onCategoryChange }: { activeCategory: string; onCategoryChange: (id: string) => void }) {
+  return (
+    <div className="menu-categories">
+      {CATEGORIES.map((category) => (
         <button
-          key={page.id}
-          onClick={() => onPageChange(page.id)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '8px 16px',
-            background: currentPage === page.id 
-              ? 'var(--color-brand-primary-light, #2fddd0)' 
-              : 'transparent',
-            color: currentPage === page.id 
-              ? 'var(--color-surface-dark, #0b1f22)' 
-              : 'var(--color-brand-primary-light-400, #bbf2e8)',
-            border: 'none',
-            borderRadius: 'var(--radius-small, 8px)',
-            fontSize: '13px',
-            fontWeight: currentPage === page.id ? '600' : '400',
-            cursor: 'pointer',
-            transition: 'all 150ms ease',
-          }}
+          key={category.id}
+          className={`category-item ${activeCategory === category.id ? 'active' : ''}`}
+          onClick={() => onCategoryChange(category.id)}
         >
-          <span>{page.icon}</span>
-          <span>{page.label}</span>
+          <div className="category-icon">
+            <CategoryIcon name={category.icon} />
+          </div>
+          <span className="category-name">{category.name}</span>
         </button>
       ))}
-    </nav>
+    </div>
   )
 }
 
-// Home page template
-function HomePage() {
-  return (
-    <>
-      <header
-        style={{
-          backgroundColor: 'var(--color-brand-primary-dark, #0b1f22)',
-          color: 'var(--color-brand-primary-light-50, #ffffff)',
-          padding: 'var(--spacing-v-colosal, 68px) var(--spacing-h-mega, 32px)',
-        }}
-      >
-        <div style={{ maxWidth: 'var(--container-large, 1280px)', margin: '0 auto' }}>
-          <h1
-            style={{
-              fontFamily: 'var(--font-family-heading, serif)',
-              fontSize: 'var(--font-size-display-xl, 68px)',
-              fontWeight: 'var(--font-weight-bold, 700)',
-              lineHeight: 'var(--line-height-small, 110%)',
-              letterSpacing: 'var(--letter-spacing-tight, -1.5px)',
-              marginBottom: 'var(--spacing-v-large, 12px)',
-            }}
-          >
-            Welcome to Veya
-          </h1>
-          <p
-            style={{
-              fontSize: 'var(--font-size-body-xl, 18px)',
-              lineHeight: 'var(--line-height-medium, 135%)',
-              color: 'var(--color-brand-primary-light-400, #bbf2e8)',
-              maxWidth: '600px',
-            }}
-          >
-            Experience your theme in action. This home page showcases typography, colors, and spacing.
-          </p>
-          <div style={{ marginTop: 'var(--spacing-v-jumbo, 24px)', display: 'flex', gap: '12px' }}>
-            <button
-              style={{
-                padding: '14px 28px',
-                background: 'var(--color-brand-secondary-1, #fc5a44)',
-                color: 'var(--color-surface-dark, #0b1f22)',
-                border: 'none',
-                borderRadius: 'var(--radius-small, 12px)',
-                fontWeight: '600',
-                cursor: 'pointer',
-              }}
-            >
-              Get Started
-            </button>
-            <button
-              style={{
-                padding: '14px 28px',
-                background: 'transparent',
-                color: 'white',
-                border: '2px solid white',
-                borderRadius: 'var(--radius-small, 12px)',
-                fontWeight: '500',
-                cursor: 'pointer',
-              }}
-            >
-              Learn More
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <section style={{ padding: 'var(--spacing-v-titan, 60px) var(--spacing-h-mega, 32px)' }}>
-        <div style={{ maxWidth: 'var(--container-large, 1280px)', margin: '0 auto' }}>
-          <h2
-            style={{
-              fontFamily: 'var(--font-family-heading, serif)',
-              fontSize: 'var(--font-size-headline-xl, 48px)',
-              marginBottom: 'var(--spacing-v-mega, 32px)',
-            }}
-          >
-            Featured Content
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                style={{
-                  background: 'var(--color-surface-light, #fff)',
-                  borderRadius: 'var(--radius-medium, 16px)',
-                  overflow: 'hidden',
-                  boxShadow: 'var(--elevation-3, 0 4px 8px rgba(0,0,0,0.12))',
-                }}
-              >
-                <div
-                  style={{
-                    height: '180px',
-                    background: `linear-gradient(135deg, var(--color-brand-primary-dark-${i === 1 ? '400' : i === 2 ? '200' : '50'}, #133c45), var(--color-brand-primary-light, #2fddd0))`,
-                  }}
-                />
-                <div style={{ padding: '20px' }}>
-                  <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Feature {i}</h3>
-                  <p style={{ color: 'var(--color-text-medium, #405255)', fontSize: '14px' }}>
-                    A brief description of this amazing feature.
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </>
-  )
+// Menu Card Component
+interface MenuCardProps {
+  title: string
+  description: string
+  calories: string
+  price: string
+  tag?: string
+  imageUrl?: string
 }
 
-// Product page template
-function ProductPage() {
+function MenuCard({ title, description, calories, price, tag, imageUrl }: MenuCardProps) {
   return (
-    <div style={{ padding: 'var(--spacing-v-giga, 48px) var(--spacing-h-mega, 32px)' }}>
-      <div style={{ maxWidth: 'var(--container-large, 1280px)', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px' }}>
-          <div
-            style={{
-              aspectRatio: '1',
-              background: 'var(--color-surface-stripe, #f9f8f4)',
-              borderRadius: 'var(--radius-large, 24px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '120px',
-            }}
-          >
-            🛍️
-          </div>
-          <div>
-            <span
-              style={{
-                display: 'inline-block',
-                padding: '4px 12px',
-                background: 'var(--color-brand-primary-light, #2fddd0)',
-                color: 'var(--color-brand-primary-dark, #0b1f22)',
-                borderRadius: 'var(--radius-full, 1000px)',
-                fontSize: '12px',
-                fontWeight: '600',
-                marginBottom: '16px',
-              }}
-            >
-              New Arrival
-            </span>
-            <h1
-              style={{
-                fontFamily: 'var(--font-family-heading, serif)',
-                fontSize: 'var(--font-size-headline-xxl, 60px)',
-                marginBottom: '16px',
-              }}
-            >
-              Premium Product
-            </h1>
-            <p
-              style={{
-                fontSize: 'var(--font-size-body-xl, 18px)',
-                color: 'var(--color-text-medium, #405255)',
-                marginBottom: '24px',
-              }}
-            >
-              This is a sample product description showcasing your typography and color choices.
-            </p>
-            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px' }}>
-              $299.00
-              <span
-                style={{
-                  fontSize: '18px',
-                  color: 'var(--color-text-light, #978f6f)',
-                  textDecoration: 'line-through',
-                  marginLeft: '12px',
-                }}
-              >
-                $399.00
-              </span>
+    <div className="menu-card">
+      <div className="card-image-wrapper">
+        <div className="card-image">
+          {imageUrl ? (
+            <img src={imageUrl} alt={title} />
+          ) : (
+            <div className="card-image-placeholder" />
+          )}
+        </div>
+      </div>
+      <div className="card-content">
+        <div className="card-title-section">
+          <h3 className="card-title">{title}</h3>
+          {tag && (
+            <div className="card-tag-wrapper">
+              <span className="card-tag">{tag}</span>
             </div>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '32px' }}>
-              <button
-                style={{
-                  flex: 1,
-                  padding: '16px 32px',
-                  background: 'var(--color-action-primary-bg-active, #0b1f22)',
-                  color: 'var(--color-action-primary-surface-active, #fff)',
-                  border: 'none',
-                  borderRadius: 'var(--radius-small, 12px)',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                }}
-              >
-                Add to Cart
-              </button>
-              <button
-                style={{
-                  padding: '16px',
-                  background: 'transparent',
-                  border: '2px solid var(--color-border-dark, #0b1f22)',
-                  borderRadius: 'var(--radius-small, 12px)',
-                  fontSize: '20px',
-                  cursor: 'pointer',
-                }}
-              >
-                ♡
-              </button>
-            </div>
-            <div
-              style={{
-                padding: '16px',
-                background: 'var(--color-surface-stripe, #f9f8f4)',
-                borderRadius: 'var(--radius-small, 12px)',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ color: 'var(--color-utility-positive, #2fddd0)' }}>✓</span>
-                <span>Free shipping on orders over $50</span>
-              </div>
-            </div>
+          )}
+        </div>
+        <div className="card-divider" />
+        <div className="card-details">
+          <p className="card-description">{description}</p>
+          <div className="card-meta">
+            <span>{calories}</span>
+            <span className="dot">•</span>
+            <span>{price}</span>
           </div>
         </div>
       </div>
@@ -514,312 +539,110 @@ function ProductPage() {
   )
 }
 
-// Blog page template
-function BlogPage() {
+// Menu Grid
+const SAMPLE_MENU_ITEMS: MenuCardProps[] = [
+  { title: 'Hummus Plate', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '560 Cal', price: '$13.99', tag: 'SEASONAL' },
+  { title: 'Falafel Bowl', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '480 Cal', price: '$14.99', tag: 'POPULAR' },
+  { title: 'Shawarma Wrap', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '620 Cal', price: '$15.99' },
+  { title: 'Greek Salad', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '320 Cal', price: '$12.99' },
+  { title: 'Lamb Kebab', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '580 Cal', price: '$17.99', tag: 'NEW' },
+  { title: 'Chicken Pita', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '510 Cal', price: '$14.49' },
+  { title: 'Veggie Bowl', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '390 Cal', price: '$13.49' },
+  { title: 'Beef Shawarma', description: 'Lorem ipsum dolor sit amet consectetur. Quis sem in odio in porta viverra non egestas tincidunt.', calories: '650 Cal', price: '$16.99' },
+]
+
+function MenuGrid() {
   return (
-    <div style={{ padding: 'var(--spacing-v-giga, 48px) var(--spacing-h-mega, 32px)' }}>
-      <div style={{ maxWidth: 'var(--container-small, 980px)', margin: '0 auto' }}>
-        <article>
-          <header style={{ marginBottom: 'var(--spacing-v-mega, 32px)' }}>
-            <span
-              style={{
-                fontFamily: 'var(--font-family-accent, monospace)',
-                fontSize: '12px',
-                color: 'var(--color-text-accent, #fc5a44)',
-                textTransform: 'uppercase',
-                letterSpacing: '1.5px',
-              }}
-            >
-              Design Systems
-            </span>
-            <h1
-              style={{
-                fontFamily: 'var(--font-family-heading, serif)',
-                fontSize: 'var(--font-size-display-md, 48px)',
-                lineHeight: 'var(--line-height-small, 110%)',
-                marginTop: '12px',
-                marginBottom: '16px',
-              }}
-            >
-              Building Scalable Theme Systems
-            </h1>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                color: 'var(--color-text-light, #978f6f)',
-                fontSize: '14px',
-              }}
-            >
-              <span>January 24, 2025</span>
-              <span>•</span>
-              <span>8 min read</span>
-            </div>
-          </header>
-
-          <div
-            style={{
-              height: '400px',
-              background: 'linear-gradient(135deg, var(--color-brand-primary-dark, #0b1f22), var(--color-brand-primary-dark-200, #1e5a67))',
-              borderRadius: 'var(--radius-large, 24px)',
-              marginBottom: 'var(--spacing-v-mega, 32px)',
-            }}
-          />
-
-          <div
-            style={{
-              fontSize: 'var(--font-size-body-xl, 18px)',
-              lineHeight: 'var(--line-height-tall, 150%)',
-              color: 'var(--color-text-medium, #405255)',
-            }}
-          >
-            <p style={{ marginBottom: '24px' }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
-              ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-            </p>
-            <h2
-              style={{
-                fontFamily: 'var(--font-family-heading, serif)',
-                fontSize: 'var(--font-size-headline-lg, 40px)',
-                color: 'var(--color-text-dark, #0b1f22)',
-                marginBottom: '16px',
-              }}
-            >
-              The Importance of Variables
-            </h2>
-            <p style={{ marginBottom: '24px' }}>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-            </p>
-            <blockquote
-              style={{
-                borderLeft: '4px solid var(--color-brand-secondary-1, #fc5a44)',
-                paddingLeft: '24px',
-                marginLeft: 0,
-                marginBottom: '24px',
-                fontStyle: 'italic',
-                fontSize: 'var(--font-size-headline-sm, 24px)',
-                color: 'var(--color-text-dark, #0b1f22)',
-              }}
-            >
-              "Design systems are the foundation of consistent user experiences."
-            </blockquote>
-          </div>
-        </article>
+    <div className="menu-grid-section">
+      <div className="menu-grid">
+        {SAMPLE_MENU_ITEMS.map((item, index) => (
+          <MenuCard key={index} {...item} imageUrl={PRODUCT_IMAGE} />
+        ))}
       </div>
     </div>
   )
 }
 
-// Form page template
-function FormPage() {
+// Footer Component
+function Footer() {
   return (
-    <div style={{ padding: 'var(--spacing-v-giga, 48px) var(--spacing-h-mega, 32px)' }}>
-      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
-        <h1
-          style={{
-            fontFamily: 'var(--font-family-heading, serif)',
-            fontSize: 'var(--font-size-headline-xl, 48px)',
-            textAlign: 'center',
-            marginBottom: 'var(--spacing-v-mega, 32px)',
-          }}
-        >
-          Contact Us
-        </h1>
-
-        <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div>
-            <label
-              style={{
-                display: 'block',
-                marginBottom: '8px',
-                fontWeight: '500',
-              }}
-            >
-              Full Name
-            </label>
-            <input
-              type="text"
-              placeholder="Enter your name"
-              style={{
-                width: '100%',
-                padding: '14px 16px',
-                border: '2px solid var(--color-border-light, #dbdbdb)',
-                borderRadius: 'var(--radius-small, 12px)',
-                fontSize: '16px',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
-            />
+    <footer className="footer">
+      <div className="footer-content">
+        {/* Logo Column */}
+        <div className="footer-column footer-brand">
+          <div className="footer-logo">
+            <VeyaLogo className="footer-logo-image" />
           </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-              Email Address
-            </label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              style={{
-                width: '100%',
-                padding: '14px 16px',
-                border: '2px solid var(--color-border-light, #dbdbdb)',
-                borderRadius: 'var(--radius-small, 12px)',
-                fontSize: '16px',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
-            />
+          <p className="footer-copyright">©2026 Built on Veya. All Rights Reserved.</p>
+          <div className="footer-social">
+            <a href="#" className="social-icon"><InstagramIcon /></a>
+            <a href="#" className="social-icon"><TikTokIcon /></a>
+            <a href="#" className="social-icon"><TwitterIcon /></a>
+            <a href="#" className="social-icon"><LinkedInIcon /></a>
           </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-              Subject
-            </label>
-            <select
-              style={{
-                width: '100%',
-                padding: '14px 16px',
-                border: '2px solid var(--color-border-light, #dbdbdb)',
-                borderRadius: 'var(--radius-small, 12px)',
-                fontSize: '16px',
-                outline: 'none',
-                background: 'white',
-                boxSizing: 'border-box',
-              }}
-            >
-              <option>General Inquiry</option>
-              <option>Support</option>
-              <option>Partnership</option>
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-              Message
-            </label>
-            <textarea
-              rows={5}
-              placeholder="Your message..."
-              style={{
-                width: '100%',
-                padding: '14px 16px',
-                border: '2px solid var(--color-border-light, #dbdbdb)',
-                borderRadius: 'var(--radius-small, 12px)',
-                fontSize: '16px',
-                outline: 'none',
-                resize: 'vertical',
-                boxSizing: 'border-box',
-              }}
-            />
-          </div>
-
-          <button
-            type="submit"
-            style={{
-              padding: '16px 32px',
-              background: 'var(--color-action-primary-bg-active, #0b1f22)',
-              color: 'var(--color-action-primary-surface-active, #fff)',
-              border: 'none',
-              borderRadius: 'var(--radius-small, 12px)',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-            }}
-          >
-            Send Message
-          </button>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-// Components showcase page
-function ComponentsPage() {
-  return (
-    <div style={{ padding: 'var(--spacing-v-giga, 48px) var(--spacing-h-mega, 32px)' }}>
-      <div style={{ maxWidth: 'var(--container-large, 1280px)', margin: '0 auto' }}>
-        <h1
-          style={{
-            fontFamily: 'var(--font-family-heading, serif)',
-            fontSize: 'var(--font-size-headline-xl, 48px)',
-            marginBottom: 'var(--spacing-v-mega, 32px)',
-          }}
-        >
-          Component Library
-        </h1>
-
-        {/* Buttons */}
-        <section style={{ marginBottom: 'var(--spacing-v-titan, 60px)' }}>
-          <h2 style={{ fontSize: '24px', marginBottom: '16px' }}>Buttons</h2>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <button style={{ padding: '12px 24px', background: 'var(--color-action-primary-bg-active)', color: 'white', border: 'none', borderRadius: 'var(--radius-small, 12px)', cursor: 'pointer' }}>Primary</button>
-            <button style={{ padding: '12px 24px', background: 'var(--color-action-secondary-bg-active)', color: 'var(--color-surface-dark)', border: 'none', borderRadius: 'var(--radius-small, 12px)', cursor: 'pointer' }}>Secondary</button>
-            <button style={{ padding: '12px 24px', background: 'transparent', color: 'var(--color-text-dark)', border: '2px solid var(--color-border-dark)', borderRadius: 'var(--radius-small, 12px)', cursor: 'pointer' }}>Outline</button>
-            <button style={{ padding: '12px 24px', background: 'var(--color-action-primary-bg-inactive)', color: 'var(--color-action-primary-surface-inactive)', border: 'none', borderRadius: 'var(--radius-small, 12px)', cursor: 'not-allowed' }} disabled>Disabled</button>
-          </div>
-        </section>
-
-        {/* Alerts */}
-        <section style={{ marginBottom: 'var(--spacing-v-titan, 60px)' }}>
-          <h2 style={{ fontSize: '24px', marginBottom: '16px' }}>Alerts</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ padding: '16px', background: 'rgba(47, 221, 208, 0.15)', borderLeft: '4px solid var(--color-utility-positive)', borderRadius: 'var(--radius-small, 12px)' }}>
-              <strong>Success!</strong> Your changes have been saved.
-            </div>
-            <div style={{ padding: '16px', background: 'rgba(255, 224, 41, 0.15)', borderLeft: '4px solid var(--color-utility-warning)', borderRadius: 'var(--radius-small, 12px)' }}>
-              <strong>Warning!</strong> Please review before continuing.
-            </div>
-            <div style={{ padding: '16px', background: 'rgba(170, 20, 0, 0.1)', borderLeft: '4px solid var(--color-utility-failure)', borderRadius: 'var(--radius-small, 12px)' }}>
-              <strong>Error!</strong> Something went wrong.
-            </div>
-          </div>
-        </section>
-
-        {/* Cards with elevation */}
-        <section style={{ marginBottom: 'var(--spacing-v-titan, 60px)' }}>
-          <h2 style={{ fontSize: '24px', marginBottom: '16px' }}>Elevation Scale</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px' }}>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                style={{
-                  padding: '24px',
-                  background: 'var(--color-surface-light)',
-                  borderRadius: 'var(--radius-medium, 16px)',
-                  boxShadow: `var(--elevation-${i})`,
-                  textAlign: 'center',
-                }}
-              >
-                <div style={{ fontSize: '24px', fontWeight: '700' }}>{i}</div>
-                <div style={{ fontSize: '12px', color: 'var(--color-text-light)' }}>Elevation</div>
+          <div className="footer-apps">
+            <a href="#" className="app-badge app-store">
+              <img src={APP_STORE_ICON} alt="" className="app-badge-icon" />
+              <div className="app-badge-content">
+                <span className="app-badge-subtext">Download on the</span>
+                <span className="app-badge-title">App Store</span>
               </div>
-            ))}
+            </a>
+            <a href="#" className="app-badge google-play">
+              <img src={GOOGLE_PLAY_ICON} alt="" className="app-badge-icon" />
+              <div className="app-badge-content">
+                <span className="app-badge-subtext">GET IT ON</span>
+                <img src={GOOGLE_PLAY_TEXT} alt="Google Play" className="google-play-text" />
+              </div>
+            </a>
           </div>
-        </section>
+        </div>
 
-        {/* Typography */}
-        <section>
-          <h2 style={{ fontSize: '24px', marginBottom: '16px' }}>Typography Scale</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ fontFamily: 'var(--font-family-heading)', fontSize: 'var(--font-size-display-lg, 60px)', lineHeight: '1.1' }}>Display Large</div>
-            <div style={{ fontFamily: 'var(--font-family-heading)', fontSize: 'var(--font-size-headline-xl, 48px)', lineHeight: '1.1' }}>Headline XL</div>
-            <div style={{ fontFamily: 'var(--font-family-heading)', fontSize: 'var(--font-size-headline-lg, 40px)', lineHeight: '1.2' }}>Headline Large</div>
-            <div style={{ fontFamily: 'var(--font-family-heading)', fontSize: 'var(--font-size-headline-md, 32px)', lineHeight: '1.2' }}>Headline Medium</div>
-            <div style={{ fontSize: 'var(--font-size-body-xl, 18px)', color: 'var(--color-text-medium)' }}>Body Extra Large - Lorem ipsum dolor sit amet</div>
-            <div style={{ fontSize: 'var(--font-size-body-lg, 16px)', color: 'var(--color-text-medium)' }}>Body Large - Lorem ipsum dolor sit amet</div>
-            <div style={{ fontSize: 'var(--font-size-body-md, 14px)', color: 'var(--color-text-light)' }}>Body Medium - Lorem ipsum dolor sit amet</div>
-          </div>
-        </section>
+        {/* Spacer columns */}
+        <div className="footer-column footer-spacer" />
+        <div className="footer-column footer-spacer" />
+
+        {/* About Us Column */}
+        <div className="footer-column">
+          <h4 className="footer-heading">About Us</h4>
+          <ul className="footer-links">
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Investor Relations</a></li>
+            <li><a href="#">Locations</a></li>
+            <li><a href="#">Press</a></li>
+          </ul>
+        </div>
+
+        {/* Support Column */}
+        <div className="footer-column">
+          <h4 className="footer-heading">Support & Services</h4>
+          <ul className="footer-links">
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Gift Cards</a></li>
+            <li><a href="#">Store</a></li>
+          </ul>
+        </div>
+
+        {/* Legal Column */}
+        <div className="footer-column">
+          <h4 className="footer-heading">Legal</h4>
+          <ul className="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Consumer Health Data Notice</a></li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </footer>
   )
 }
+
+// ============================================================================
+// Main Preview Page
+// ============================================================================
 
 export default function PreviewPage() {
-  const [currentPage, setCurrentPage] = useState<PageId>('home')
+  const [activeCategory, setActiveCategory] = useState('mezze')
   const [initialData, setInitialData] = useState<ThemeEditorType | null>(null)
   const [postMessageTheme, setPostMessageTheme] = useState<ThemeEditorType | null>(null)
 
@@ -864,51 +687,14 @@ export default function PreviewPage() {
 
   const cssVars = generateCSSVariables(theme || defaultTheme)
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'home':
-        return <HomePage />
-      case 'product':
-        return <ProductPage />
-      case 'blog':
-        return <BlogPage />
-      case 'form':
-        return <FormPage />
-      case 'components':
-        return <ComponentsPage />
-      default:
-        return <HomePage />
-    }
-  }
-
   return (
-    <div
-      style={{
-        ...cssVars,
-        minHeight: '100vh',
-        fontFamily: 'var(--font-family-body, system-ui)',
-        backgroundColor: 'var(--color-surface-light, #ffffff)',
-        color: 'var(--color-text-dark, #0b1f22)',
-      }}
-    >
-      <PageSelector currentPage={currentPage} onPageChange={setCurrentPage} />
-      {renderPage()}
-      
-      {/* Footer */}
-      <footer
-        style={{
-          backgroundColor: 'var(--color-surface-stripe, #f9f8f4)',
-          padding: 'var(--spacing-v-mega, 32px) var(--spacing-h-mega, 32px)',
-          borderTop: '1px solid var(--color-border-light, #dbdbdb)',
-          marginTop: 'auto',
-        }}
-      >
-        <div style={{ maxWidth: 'var(--container-large, 1280px)', margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: '14px', color: 'var(--color-text-medium, #405255)' }}>
-            Veya Theme Customizer POC — Preview: {PREVIEW_PAGES.find((p) => p.id === currentPage)?.label}
-          </p>
-        </div>
-      </footer>
+    <div className="preview-page" style={cssVars as React.CSSProperties}>
+      <TopNavigation />
+      <HeroSection />
+      <MenuCategories activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
+      <MenuGrid />
+      <MenuGrid />
+      <Footer />
     </div>
   )
 }
