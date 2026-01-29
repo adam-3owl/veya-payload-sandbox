@@ -3,7 +3,6 @@
   "framework": "nextjs",
   "buildCommand": "pnpm build",
   "installCommand": "pnpm install",
-  "regions": ["iad1"],
   "functions": {
     "src/app/**/*.ts": {
       "maxDuration": 30
