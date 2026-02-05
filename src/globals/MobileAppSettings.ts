@@ -1,4 +1,13 @@
 import type { GlobalConfig } from 'payload'
+import {
+  colorField,
+  sizeField,
+  assetField,
+  typographyGroup,
+  underlineTabsFields,
+  iconGroup,
+  ctaFields,
+} from './fields'
 
 export const MobileAppSettings: GlobalConfig = {
   slug: 'mobile-app-settings',
@@ -248,37 +257,250 @@ export const MobileAppSettings: GlobalConfig = {
       name: 'locations',
       label: 'Locations',
       fields: [
-        // Location Finder
-        { name: 'enableLocationServices', type: 'checkbox', label: 'Enable Location Services', defaultValue: true },
+        // ── Modal Settings ──────────────────────────────────────────────
         {
-          name: 'defaultView',
-          type: 'select',
-          label: 'Default View',
-          defaultValue: 'map',
-          options: [
-            { label: 'Map View', value: 'map' },
-            { label: 'List View', value: 'list' },
+          type: 'group',
+          name: 'modal',
+          label: 'Modal Settings',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                colorField('bgColor', 'Background Color', '#ffffff'),
+                colorField('colorBtnBgColor', 'Color Button BG', '#f0f0f0'),
+              ],
+            },
+            assetField('closeIconAsset', 'Close Icon', 'icons'),
+            colorField('closeIconColor', 'Close Icon Color', '#000000', '50%'),
           ],
         },
-        { name: 'searchRadius', type: 'text', label: 'Search Radius', defaultValue: '25' },
-        // Store Details
-        { name: 'showHours', type: 'checkbox', label: 'Show Hours', defaultValue: true },
-        { name: 'showPhone', type: 'checkbox', label: 'Show Phone', defaultValue: true },
-        { name: 'showDirections', type: 'checkbox', label: 'Show Directions', defaultValue: true },
-        { name: 'showAmenities', type: 'checkbox', label: 'Show Amenities', defaultValue: true },
-        // Map Settings
+
+        // ── Conveyance Selection ────────────────────────────────────────
         {
-          name: 'mapProvider',
-          type: 'select',
-          label: 'Map Provider',
-          defaultValue: 'apple',
-          options: [
-            { label: 'Apple Maps', value: 'apple' },
-            { label: 'Google Maps', value: 'google' },
+          type: 'group',
+          name: 'conveyanceSelection',
+          label: 'Conveyance Selection',
+          fields: [
+            {
+              name: 'selectionStyle',
+              type: 'select',
+              label: 'Selection Style',
+              dbName: 'sel_style',
+              enumName: 'loc_conv_sel_style',
+              defaultValue: 'pill',
+              options: [
+                { label: 'Pill', value: 'pill' },
+                { label: 'Underline Tabs', value: 'underlineTabs' },
+              ],
+            },
+            // Pill Settings (conditional)
+            {
+              type: 'collapsible',
+              label: 'Pill Settings',
+              admin: {
+                initCollapsed: false,
+                condition: (_data, siblingData) => siblingData?.selectionStyle === 'pill',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    colorField('pillActiveBgColor', 'Active BG', '#000000'),
+                    colorField('pillActiveBorderColor', 'Active Border', '#000000'),
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    colorField('pillActiveTextColor', 'Active Text', '#ffffff'),
+                    colorField('pillInactiveBgColor', 'Inactive BG', '#ffffff'),
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    colorField('pillInactiveTextColor', 'Inactive Text', '#666666'),
+                    sizeField('pillBorderRadius', 'Border Radius', '24px', {
+                      min: 0,
+                      max: 50,
+                    }),
+                  ],
+                },
+              ],
+            },
+            // Underline Tab Settings (conditional)
+            {
+              type: 'collapsible',
+              label: 'Underline Tab Settings',
+              admin: {
+                initCollapsed: false,
+                condition: (_data, siblingData) => siblingData?.selectionStyle === 'underlineTabs',
+              },
+              fields: underlineTabsFields('tab'),
+            },
+            // Input Field
+            {
+              type: 'group',
+              name: 'inputField',
+              label: 'Input Field',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    colorField('inactiveBorder', 'Inactive Border', '#dbdbdb'),
+                    colorField('activeBorder', 'Active Border', '#000000'),
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    colorField('placeholderColor', 'Placeholder Color', '#978f6f'),
+                    colorField('textColor', 'Text Color', '#000000'),
+                  ],
+                },
+              ],
+            },
           ],
         },
-        { name: 'showTraffic', type: 'checkbox', label: 'Show Traffic', defaultValue: false },
-        { name: 'clusterMarkers', type: 'checkbox', label: 'Cluster Markers', defaultValue: true },
+
+        // ── Return List ─────────────────────────────────────────────────
+        {
+          type: 'group',
+          name: 'returnList',
+          label: 'Return List',
+          fields: [
+            // List Tabs
+            {
+              type: 'collapsible',
+              label: 'List Tabs',
+              admin: { initCollapsed: true },
+              fields: underlineTabsFields('listTab'),
+            },
+            // Map Icon
+            {
+              type: 'collapsible',
+              label: 'Map Icon',
+              admin: { initCollapsed: true },
+              fields: [iconGroup('mapIcon', 'Map Icon', { bgColor: '#ffffff', iconColor: '#000000' })],
+            },
+            // Location Card
+            {
+              type: 'collapsible',
+              label: 'Location Card',
+              admin: { initCollapsed: true },
+              fields: [
+                {
+                  name: 'cardStyle',
+                  type: 'select',
+                  label: 'Card Style',
+                  dbName: 'card_style',
+                  enumName: 'loc_ret_card_style',
+                  defaultValue: 'flat',
+                  options: [{ label: 'Flat', value: 'flat' }],
+                },
+                typographyGroup('cardTitle', 'Card Title', {
+                  fontSize: '16px',
+                  color: '#000000',
+                }),
+                typographyGroup('cardAddress', 'Card Address', {
+                  fontSize: '14px',
+                  color: '#666666',
+                }),
+                typographyGroup('cardHours', 'Card Hours', {
+                  fontSize: '12px',
+                  color: '#999999',
+                }),
+                {
+                  type: 'row',
+                  fields: [
+                    colorField('cardBgColor', 'Card BG', '#ffffff'),
+                    colorField('cardStripeColor', 'Stripe Color', '#f0f0f0'),
+                  ],
+                },
+                colorField('cardBorderColor', 'Border Color', '#e0e0e0', '50%'),
+                iconGroup('deliveryIcon', 'Delivery Icon', {
+                  bgColor: '#f0f0f0',
+                  iconColor: '#000000',
+                }),
+              ],
+            },
+            // Additional Details
+            {
+              type: 'collapsible',
+              label: 'Additional Details',
+              admin: { initCollapsed: true },
+              fields: [
+                typographyGroup('detailsTitle', 'Details Title', {
+                  fontSize: '16px',
+                  color: '#000000',
+                }),
+                typographyGroup('detailsSubtitle', 'Details Subtitle', {
+                  fontSize: '14px',
+                  color: '#666666',
+                }),
+              ],
+            },
+            // Secondary CTAs
+            {
+              type: 'collapsible',
+              label: 'Secondary CTAs',
+              admin: { initCollapsed: true },
+              fields: ctaFields('cta'),
+            },
+          ],
+        },
+
+        // ── Map ─────────────────────────────────────────────────────────
+        {
+          type: 'group',
+          name: 'map',
+          label: 'Map',
+          fields: [
+            colorField('bgColor', 'Background Color', '#e5e3df', '50%'),
+            {
+              type: 'row',
+              fields: [
+                assetField('activePin', 'Active Pin', 'icons'),
+                assetField('inactivePin', 'Inactive Pin', 'icons'),
+              ],
+            },
+            colorField('popoverBgColor', 'Popover BG Color', '#ffffff', '50%'),
+            typographyGroup('popoverText', 'Popover Text', {
+              fontSize: '14px',
+              color: '#000000',
+            }),
+          ],
+        },
+
+        // ── Empty States ────────────────────────────────────────────────
+        {
+          type: 'group',
+          name: 'emptyStates',
+          label: 'Empty States',
+          fields: [
+            colorField('containerBgColor', 'Container BG Color', '#f9f8f4', '50%'),
+            typographyGroup('emptyTitle', 'Empty Title', {
+              fontSize: '18px',
+              color: '#000000',
+            }),
+            typographyGroup('emptyBody', 'Empty Body', {
+              fontSize: '14px',
+              color: '#666666',
+            }),
+            {
+              type: 'collapsible',
+              label: 'Icons & Assets',
+              admin: { initCollapsed: true },
+              fields: [
+                assetField('locationServicesIcon', 'Location Services Icon', 'icons'),
+                assetField('noNearbyLocationsIcon', 'No Nearby Locations Icon', 'icons'),
+                assetField('errorIcon', 'Error Icon', 'icons'),
+                assetField('noResultsFoundAsset', 'No Results Found Asset', 'media', 'Raster image for no results state'),
+                assetField('loadingLottieAsset', 'Loading Lottie Asset', 'media', 'Lottie JSON animation file'),
+              ],
+            },
+          ],
+        },
       ],
     },
     // Menu Settings

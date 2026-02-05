@@ -813,16 +813,123 @@ export interface MobileAppSetting {
       | null;
   };
   locations?: {
-    enableLocationServices?: boolean | null;
-    defaultView?: ('map' | 'list') | null;
-    searchRadius?: string | null;
-    showHours?: boolean | null;
-    showPhone?: boolean | null;
-    showDirections?: boolean | null;
-    showAmenities?: boolean | null;
-    mapProvider?: ('apple' | 'google') | null;
-    showTraffic?: boolean | null;
-    clusterMarkers?: boolean | null;
+    modal?: {
+      bgColor?: string | null;
+      colorBtnBgColor?: string | null;
+      closeIconAsset?: (number | null) | Icon;
+      closeIconColor?: string | null;
+    };
+    conveyanceSelection?: {
+      selectionStyle?: ('pill' | 'underlineTabs') | null;
+      pillActiveBgColor?: string | null;
+      pillActiveBorderColor?: string | null;
+      pillActiveTextColor?: string | null;
+      pillInactiveBgColor?: string | null;
+      pillInactiveTextColor?: string | null;
+      pillBorderRadius?: string | null;
+      tabActiveUnderlineColor?: string | null;
+      tabActiveTextColor?: string | null;
+      tabInactiveUnderlineColor?: string | null;
+      tabInactiveTextColor?: string | null;
+      inputField?: {
+        inactiveBorder?: string | null;
+        activeBorder?: string | null;
+        placeholderColor?: string | null;
+        textColor?: string | null;
+      };
+    };
+    returnList?: {
+      listTabActiveUnderlineColor?: string | null;
+      listTabActiveTextColor?: string | null;
+      listTabInactiveUnderlineColor?: string | null;
+      listTabInactiveTextColor?: string | null;
+      mapIcon?: {
+        bgColor?: string | null;
+        iconColor?: string | null;
+        asset?: (number | null) | Icon;
+      };
+      cardStyle?: 'flat' | null;
+      cardTitle?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+      cardAddress?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+      cardHours?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+      cardBgColor?: string | null;
+      cardStripeColor?: string | null;
+      cardBorderColor?: string | null;
+      deliveryIcon?: {
+        bgColor?: string | null;
+        iconColor?: string | null;
+        asset?: (number | null) | Icon;
+      };
+      detailsTitle?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+      detailsSubtitle?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+      ctaBgColor?: string | null;
+      ctaTextColor?: string | null;
+      ctaBorderColor?: string | null;
+      ctaBorderWidth?: string | null;
+    };
+    map?: {
+      bgColor?: string | null;
+      activePin?: (number | null) | Icon;
+      inactivePin?: (number | null) | Icon;
+      popoverBgColor?: string | null;
+      popoverText?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+    };
+    emptyStates?: {
+      containerBgColor?: string | null;
+      emptyTitle?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+      emptyBody?: {
+        fontFamily?: string | null;
+        lineHeight?: string | null;
+        fontSize?: string | null;
+        color?: string | null;
+      };
+      locationServicesIcon?: (number | null) | Icon;
+      noNearbyLocationsIcon?: (number | null) | Icon;
+      errorIcon?: (number | null) | Icon;
+      /**
+       * Raster image for no results state
+       */
+      noResultsFoundAsset?: (number | null) | Media;
+      /**
+       * Lottie JSON animation file
+       */
+      loadingLottieAsset?: (number | null) | Media;
+    };
   };
   menu?: {
     layout?: ('grid' | 'list' | 'compact') | null;
@@ -1259,16 +1366,149 @@ export interface MobileAppSettingsSelect<T extends boolean = true> {
   locations?:
     | T
     | {
-        enableLocationServices?: T;
-        defaultView?: T;
-        searchRadius?: T;
-        showHours?: T;
-        showPhone?: T;
-        showDirections?: T;
-        showAmenities?: T;
-        mapProvider?: T;
-        showTraffic?: T;
-        clusterMarkers?: T;
+        modal?:
+          | T
+          | {
+              bgColor?: T;
+              colorBtnBgColor?: T;
+              closeIconAsset?: T;
+              closeIconColor?: T;
+            };
+        conveyanceSelection?:
+          | T
+          | {
+              selectionStyle?: T;
+              pillActiveBgColor?: T;
+              pillActiveBorderColor?: T;
+              pillActiveTextColor?: T;
+              pillInactiveBgColor?: T;
+              pillInactiveTextColor?: T;
+              pillBorderRadius?: T;
+              tabActiveUnderlineColor?: T;
+              tabActiveTextColor?: T;
+              tabInactiveUnderlineColor?: T;
+              tabInactiveTextColor?: T;
+              inputField?:
+                | T
+                | {
+                    inactiveBorder?: T;
+                    activeBorder?: T;
+                    placeholderColor?: T;
+                    textColor?: T;
+                  };
+            };
+        returnList?:
+          | T
+          | {
+              listTabActiveUnderlineColor?: T;
+              listTabActiveTextColor?: T;
+              listTabInactiveUnderlineColor?: T;
+              listTabInactiveTextColor?: T;
+              mapIcon?:
+                | T
+                | {
+                    bgColor?: T;
+                    iconColor?: T;
+                    asset?: T;
+                  };
+              cardStyle?: T;
+              cardTitle?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+              cardAddress?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+              cardHours?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+              cardBgColor?: T;
+              cardStripeColor?: T;
+              cardBorderColor?: T;
+              deliveryIcon?:
+                | T
+                | {
+                    bgColor?: T;
+                    iconColor?: T;
+                    asset?: T;
+                  };
+              detailsTitle?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+              detailsSubtitle?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+              ctaBgColor?: T;
+              ctaTextColor?: T;
+              ctaBorderColor?: T;
+              ctaBorderWidth?: T;
+            };
+        map?:
+          | T
+          | {
+              bgColor?: T;
+              activePin?: T;
+              inactivePin?: T;
+              popoverBgColor?: T;
+              popoverText?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+            };
+        emptyStates?:
+          | T
+          | {
+              containerBgColor?: T;
+              emptyTitle?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+              emptyBody?:
+                | T
+                | {
+                    fontFamily?: T;
+                    lineHeight?: T;
+                    fontSize?: T;
+                    color?: T;
+                  };
+              locationServicesIcon?: T;
+              noNearbyLocationsIcon?: T;
+              errorIcon?: T;
+              noResultsFoundAsset?: T;
+              loadingLottieAsset?: T;
+            };
       };
   menu?:
     | T
