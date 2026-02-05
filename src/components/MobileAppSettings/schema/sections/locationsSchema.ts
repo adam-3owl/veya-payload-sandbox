@@ -50,7 +50,7 @@ export const locationsSchema: UISectionSchema = {
           sizeField('pillBorderRadius', 'Border Radius', '12px', { min: 0, max: 50 }), // Radius Small
         ),
       ], {
-        defaultOpen: true,
+        defaultOpen: false,
         condition: (getValue) =>
           (getValue('locations.conveyanceSelection.selectionStyle') as string) === 'pill',
       }),
@@ -64,7 +64,7 @@ export const locationsSchema: UISectionSchema = {
           inactiveTextColor: '#5d5d5d', // Action / Text / Surface Inactive
         }),
         {
-          defaultOpen: true,
+          defaultOpen: false,
           condition: (getValue) =>
             (getValue('locations.conveyanceSelection.selectionStyle') as string) === 'underlineTabs',
         },
