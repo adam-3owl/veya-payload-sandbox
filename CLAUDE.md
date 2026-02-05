@@ -203,6 +203,36 @@ await req.payload.update({
 })
 ```
 
+## MobileAppSettings Schema-Driven Rendering
+
+**IMPORTANT: All MobileAppSettings sections use a schema-driven rendering system.**
+
+### Architecture (`src/components/MobileAppSettings/schema/`)
+
+| File | Purpose |
+|------|---------|
+| `types.ts` | UI schema type definitions (leaf fields, layout nodes, `CustomFieldProps`) |
+| `builders.ts` | UI schema builder functions (mirrors `src/globals/fields/builders.ts`) |
+| `FieldRenderer.tsx` | Maps leaf field types to React components |
+| `SectionRenderer.tsx` | Recursive renderer: schema tree → React component tree |
+| `sections/*.ts` | Per-section UI schemas (locationsSchema, menuSchema, etc.) |
+
+### Rules
+
+1. **All new MAS sections must use `SectionRenderer`** with a declarative schema — never hand-code section JSX
+2. **New field types** must be added to `schema/types.ts` (type definition) and `schema/FieldRenderer.tsx` (render mapping)
+3. **UI schema builders must mirror Payload builders** in signature and naming (see `builders.ts`)
+4. **Complex interactive UI** (arrays, drag-and-drop, page builders) uses the `custom` escape hatch — implement as a component accepting `CustomFieldProps`
+5. **Path alignment**: `group` appends its `name` to the path; `collapsible` and `conditional` do NOT change the path
+6. **Section schemas** live in `schema/sections/` and are imported by the thin section components in `sections/`
+7. **Design token comments** — All color/size default values must include an inline comment with the design token name, e.g. `colorField('bgColor', 'Background', '#0b1f22'), // Brand / Primary Dark`. This applies to both the UI schema (`schema/sections/`) and the Payload global config (`src/globals/MobileAppSettings.ts`). Keep both files in sync.
+
+### Adding a New MAS Section
+
+1. Create `schema/sections/newSectionSchema.ts` using builders from `schema/builders.ts`
+2. Create thin wrapper: `sections/NewSection.tsx` that renders `<SectionRenderer schema={newSectionSchema} />`
+3. For complex interactive parts, create a standalone component accepting `CustomFieldProps` and use the `custom()` builder
+
 ## Testing
 
 - Integration tests: `tests/int/*.int.spec.ts` (Vitest with jsdom)

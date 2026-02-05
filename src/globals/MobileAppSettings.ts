@@ -266,12 +266,12 @@ export const MobileAppSettings: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                colorField('bgColor', 'Background Color', '#ffffff'),
-                colorField('colorBtnBgColor', 'Color Button BG', '#f0f0f0'),
+                colorField('bgColor', 'Background Color', '#ffffff'), // Surface Light
+                colorField('colorBtnBgColor', 'Color Button BG', '#deddd6'), // Utility / Native Control
               ],
             },
             assetField('closeIconAsset', 'Close Icon', 'icons'),
-            colorField('closeIconColor', 'Close Icon Color', '#000000', '50%'),
+            colorField('closeIconColor', 'Close Icon Color', '#0b1f22', '50%'), // Surface Dark
           ],
         },
 
@@ -305,22 +305,22 @@ export const MobileAppSettings: GlobalConfig = {
                 {
                   type: 'row',
                   fields: [
-                    colorField('pillActiveBgColor', 'Active BG', '#000000'),
-                    colorField('pillActiveBorderColor', 'Active Border', '#000000'),
+                    colorField('pillActiveBgColor', 'Active BG', '#0b1f22'), // Brand / Primary Dark
+                    colorField('pillActiveBorderColor', 'Active Border', '#0b1f22'), // Brand / Primary Dark
                   ],
                 },
                 {
                   type: 'row',
                   fields: [
-                    colorField('pillActiveTextColor', 'Active Text', '#ffffff'),
-                    colorField('pillInactiveBgColor', 'Inactive BG', '#ffffff'),
+                    colorField('pillActiveTextColor', 'Active Text', '#ffffff'), // Action / Primary / Surface Active
+                    colorField('pillInactiveBgColor', 'Inactive BG', 'transparent'), // Transparent
                   ],
                 },
                 {
                   type: 'row',
                   fields: [
-                    colorField('pillInactiveTextColor', 'Inactive Text', '#666666'),
-                    sizeField('pillBorderRadius', 'Border Radius', '24px', {
+                    colorField('pillInactiveTextColor', 'Inactive Text', '#949494'), // Action / Primary / Surface Inactive
+                    sizeField('pillBorderRadius', 'Border Radius', '12px', { // Radius Small
                       min: 0,
                       max: 50,
                     }),
@@ -336,7 +336,12 @@ export const MobileAppSettings: GlobalConfig = {
                 initCollapsed: false,
                 condition: (_data, siblingData) => siblingData?.selectionStyle === 'underlineTabs',
               },
-              fields: underlineTabsFields('tab'),
+              fields: underlineTabsFields('tab', {
+                activeUnderlineColor: '#0b1f22', // Brand / Primary Dark
+                activeTextColor: '#0b1f22', // Action / Text / Surface Active
+                inactiveUnderlineColor: '#dbdbdb', // Border / Light
+                inactiveTextColor: '#5d5d5d', // Action / Text / Surface Inactive
+              }),
             },
             // Input Field
             {
@@ -347,15 +352,15 @@ export const MobileAppSettings: GlobalConfig = {
                 {
                   type: 'row',
                   fields: [
-                    colorField('inactiveBorder', 'Inactive Border', '#dbdbdb'),
-                    colorField('activeBorder', 'Active Border', '#000000'),
+                    colorField('inactiveBorder', 'Inactive Border', '#dbdbdb'), // Field / Border Inactive
+                    colorField('activeBorder', 'Active Border', '#0b1f22'), // Field / Border Active
                   ],
                 },
                 {
                   type: 'row',
                   fields: [
-                    colorField('placeholderColor', 'Placeholder Color', '#978f6f'),
-                    colorField('textColor', 'Text Color', '#000000'),
+                    colorField('placeholderColor', 'Placeholder Color', '#978f6f'), // Field / Placeholder
+                    colorField('textColor', 'Text Color', '#0b1f22'), // Field / Field Input
                   ],
                 },
               ],
@@ -374,14 +379,22 @@ export const MobileAppSettings: GlobalConfig = {
               type: 'collapsible',
               label: 'List Tabs',
               admin: { initCollapsed: true },
-              fields: underlineTabsFields('listTab'),
+              fields: underlineTabsFields('listTab', {
+                activeUnderlineColor: '#0b1f22', // Text / Dark
+                activeTextColor: '#0b1f22', // Text / Dark
+                inactiveUnderlineColor: '#949494', // Action / Primary / Surface Inactive
+                inactiveTextColor: '#949494', // Action / Primary / Surface Inactive
+              }),
             },
             // Map Icon
             {
               type: 'collapsible',
               label: 'Map Icon',
               admin: { initCollapsed: true },
-              fields: [iconGroup('mapIcon', 'Map Icon', { bgColor: '#ffffff', iconColor: '#000000' })],
+              fields: [iconGroup('mapIcon', 'Map Icon', {
+                bgColor: '#133c45', // Brand / Primary Dark 400
+                iconColor: '#ffffff', // Surface Light
+              })],
             },
             // Location Card
             {
@@ -398,29 +411,29 @@ export const MobileAppSettings: GlobalConfig = {
                   defaultValue: 'flat',
                   options: [{ label: 'Flat', value: 'flat' }],
                 },
-                typographyGroup('cardTitle', 'Card Title', {
-                  fontSize: '16px',
-                  color: '#000000',
-                }),
-                typographyGroup('cardAddress', 'Card Address', {
+                typographyGroup('cardTitle', 'Card Title', { // Headline / Extra Small, Text / Dark
                   fontSize: '14px',
-                  color: '#666666',
+                  color: '#0b1f22',
                 }),
-                typographyGroup('cardHours', 'Card Hours', {
+                typographyGroup('cardAddress', 'Card Address', { // Body / Medium, Text / Medium
                   fontSize: '12px',
-                  color: '#999999',
+                  color: '#405255',
+                }),
+                typographyGroup('cardHours', 'Card Hours', { // Body / Small, Text / Light
+                  fontSize: '11px',
+                  color: '#978f6f',
                 }),
                 {
                   type: 'row',
                   fields: [
-                    colorField('cardBgColor', 'Card BG', '#ffffff'),
-                    colorField('cardStripeColor', 'Stripe Color', '#f0f0f0'),
+                    colorField('cardBgColor', 'Card BG', '#ffffff'), // Surface / Light
+                    colorField('cardStripeColor', 'Stripe Color', '#f9f8f4'), // Surface / Stripe
                   ],
                 },
-                colorField('cardBorderColor', 'Border Color', '#e0e0e0', '50%'),
+                colorField('cardBorderColor', 'Border Color', '#dbdbdb', '50%'), // Border / Light
                 iconGroup('deliveryIcon', 'Delivery Icon', {
-                  bgColor: '#f0f0f0',
-                  iconColor: '#000000',
+                  bgColor: '#f9f8f4', // Brand / Primary Light 200
+                  iconColor: '#0b1f22', // Brand / Primary Dark
                 }),
               ],
             },
@@ -430,13 +443,13 @@ export const MobileAppSettings: GlobalConfig = {
               label: 'Additional Details',
               admin: { initCollapsed: true },
               fields: [
-                typographyGroup('detailsTitle', 'Details Title', {
-                  fontSize: '16px',
-                  color: '#000000',
+                typographyGroup('detailsTitle', 'Details Title', { // Body / Small, Text / Dark
+                  fontSize: '11px',
+                  color: '#0b1f22',
                 }),
-                typographyGroup('detailsSubtitle', 'Details Subtitle', {
-                  fontSize: '14px',
-                  color: '#666666',
+                typographyGroup('detailsSubtitle', 'Details Subtitle', { // Body / Extra Small, Text / Medium
+                  fontSize: '10px',
+                  color: '#405255',
                 }),
               ],
             },
@@ -445,7 +458,11 @@ export const MobileAppSettings: GlobalConfig = {
               type: 'collapsible',
               label: 'Secondary CTAs',
               admin: { initCollapsed: true },
-              fields: ctaFields('cta'),
+              fields: ctaFields('cta', {
+                bgColor: '#fc5a44', // Action / Secondary / BG Active
+                textColor: '#0b1f22', // Action / Secondary / Surface Active
+                borderColor: '#fc5a44', // Action / Secondary / BG Active
+              }),
             },
           ],
         },
@@ -464,10 +481,10 @@ export const MobileAppSettings: GlobalConfig = {
                 assetField('inactivePin', 'Inactive Pin', 'icons'),
               ],
             },
-            colorField('popoverBgColor', 'Popover BG Color', '#ffffff', '50%'),
-            typographyGroup('popoverText', 'Popover Text', {
+            colorField('popoverBgColor', 'Popover BG Color', '#ffffff', '50%'), // Surface / Light
+            typographyGroup('popoverText', 'Popover Text', { // Headline / Extra Small, Text / Dark
               fontSize: '14px',
-              color: '#000000',
+              color: '#0b1f22',
             }),
           ],
         },
@@ -478,14 +495,14 @@ export const MobileAppSettings: GlobalConfig = {
           name: 'emptyStates',
           label: 'Empty States',
           fields: [
-            colorField('containerBgColor', 'Container BG Color', '#f9f8f4', '50%'),
-            typographyGroup('emptyTitle', 'Empty Title', {
+            colorField('containerBgColor', 'Container BG Color', '#f9f8f4', '50%'), // Surface / Stripe
+            typographyGroup('emptyTitle', 'Empty Title', { // Headline / Small, Text / Dark
               fontSize: '18px',
-              color: '#000000',
+              color: '#0b1f22',
             }),
-            typographyGroup('emptyBody', 'Empty Body', {
-              fontSize: '14px',
-              color: '#666666',
+            typographyGroup('emptyBody', 'Empty Body', { // Body / Medium, Text / Dark
+              fontSize: '12px',
+              color: '#0b1f22',
             }),
             {
               type: 'collapsible',
