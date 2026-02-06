@@ -26,7 +26,7 @@ export const locationsSchema: UISectionSchema = {
       ),
       assetField('closeIconAsset', 'Close Icon', 'icons'),
       colorField('closeIconColor', 'Close Icon Color', '#0b1f22'), // Surface Dark
-    ], true),
+    ]),
 
     // ── Conveyance Selection ────────────────────────────────────────
     group('conveyanceSelection', 'Conveyance Selection', [

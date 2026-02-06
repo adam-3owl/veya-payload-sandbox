@@ -122,7 +122,7 @@ export const menuSchema: UISectionSchema = {
           colorField('locationFontColor', 'Font Color', '#405255'), // Text / Medium
         ),
       ]),
-    ], true),
+    ]),
 
     // ── Category Navigation ───────────────────────────────────────────
     group('menuCategories', 'Category Navigation', [
@@ -152,7 +152,7 @@ export const menuSchema: UISectionSchema = {
           colorField('tabActiveUnderlineColor', 'Active Tab Underline', '#0b1f22'), // Brand / Primary Dark
         ),
       ]),
-    ], true),
+    ]),
 
     // ── Category Titles ───────────────────────────────────────────────
     group('categoryTitle', 'Category Titles', [
@@ -183,7 +183,7 @@ export const menuSchema: UISectionSchema = {
         ),
         colorField('subFontColor', 'Font Color', '#405255'), // Text / Medium
       ]),
-    ], true),
+    ]),
 
     // ── Product Card ──────────────────────────────────────────────────
     group('productCard', 'Product Card', [
@@ -283,7 +283,7 @@ export const menuSchema: UISectionSchema = {
         ),
         numberField('quickAddBorderRadius', 'Border Radius', 1000, { min: 0, max: 1000 }), // Radius / Full
       ]),
-    ], true),
+    ]),
 
     // ── Conveyance Selection Modal ────────────────────────────────────
     group('conveyanceModal', 'Conveyance Selection Modal', [
@@ -520,7 +520,7 @@ export const menuSchema: UISectionSchema = {
           colorField('timeRowSubFontColor', 'Font Color', '#405255'), // Text / Medium
         ),
       ]),
-    ], true),
+    ]),
 
     // ── Menu Search ────────────────────────────────────────────────────
     group('menuSearch', 'Menu Search', [
